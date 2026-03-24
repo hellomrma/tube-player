@@ -1,0 +1,356 @@
+import { EventEmitter } from '../core/EventEmitter.js';
+
+const YT_STATES = {
+  UNSTARTED: 'unstarted',
+  LOADING: 'loading',
+  READY: 'ready',
+  PLAYING: 'playing',
+  PAUSED: 'paused',
+  BUFFERING: 'buffering',
+  ENDED: 'ended',
+};
+
+// YouTube IFrame API → 내부 상태 매핑
+const YT_STATE_MAP = {
+  [-1]: YT_STATES.UNSTARTED,
+  0: YT_STATES.ENDED,
+  1: YT_STATES.PLAYING,
+  2: YT_STATES.PAUSED,
+  3: YT_STATES.BUFFERING,
+  5: YT_STATES.READY, // cued
+};
+
+let apiLoadPromise = null;
+
+function loadYouTubeAPI() {
+  if (apiLoadPromise) return apiLoadPromise;
+
+  if (window.YT && window.YT.Player) {
+    return Promise.resolve();
+  }
+
+  apiLoadPromise = new Promise((resolve) => {
+    const existingCallback = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (existingCallback) existingCallback();
+      resolve();
+    };
+
+    const script = document.createElement('script');
+    script.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(script);
+  });
+
+  return apiLoadPromise;
+}
+
+export class TubeYouTube extends EventEmitter {
+  /**
+   * @param {string} videoId - YouTube 비디오 ID
+   * @param {object} options
+   * @param {boolean} [options.autoplay=true]
+   * @param {boolean} [options.muted=false]
+   * @param {string} [options.theme='dark']
+   * @param {string[]} [options.controls]
+   * @param {Function} [options.onReady]
+   * @param {Function} [options.onStateChange]
+   * @param {Function} [options.onProgress]
+   */
+  constructor(videoId, options = {}) {
+    super();
+    this.videoId = videoId;
+    this.options = {
+      autoplay: true,
+      muted: false,
+      theme: 'dark',
+      controls: ['mute', 'fullscreen'],
+      ...options,
+    };
+    this.state = YT_STATES.UNSTARTED;
+    this._ytPlayer = null;
+    this._progressTimer = null;
+    this._containerEl = null;
+    this._playerEl = null;
+    this._controlsEl = null;
+    this._controlInstances = [];
+    this._mounted = false;
+
+    if (this.options.onReady) this.on('video:ready', this.options.onReady);
+    if (this.options.onStateChange) this.on('video:statechange', this.options.onStateChange);
+    if (this.options.onProgress) this.on('video:progress', this.options.onProgress);
+  }
+
+  /**
+   * 플레이어를 특정 DOM 요소에 마운트한다.
+   * @param {HTMLElement} container
+   */
+  async mount(container) {
+    if (this._mounted) return this;
+    this._mounted = true;
+    this._containerEl = container;
+
+    // 컨테이너 구조 생성
+    container.innerHTML = '';
+    container.setAttribute('data-tube-theme', this.options.theme);
+    container.classList.add('tube-youtube');
+
+    // 플레이어 영역
+    const playerWrapper = document.createElement('div');
+    playerWrapper.className = 'tube-youtube__player';
+    const playerTarget = document.createElement('div');
+    playerTarget.id = `tube-yt-${this.videoId}-${Date.now()}`;
+    playerWrapper.appendChild(playerTarget);
+
+    // 포스터 — YouTube 썸네일로 iframe을 덮어 일시정지/종료 시 기본 UI 노출 차단
+    this._posterEl = document.createElement('div');
+    this._posterEl.className = 'tube-youtube__poster';
+    this._posterEl.style.background =
+      `url("https://img.youtube.com/vi/${this.videoId}/sddefault.jpg") 50% 50% / cover no-repeat #000`;
+    playerWrapper.appendChild(this._posterEl);
+
+    // 오버레이 — 항상 최상위에서 마우스 이벤트를 가로채 YouTube hover UI 차단
+    // 중앙에 재생/일시정지 아이콘을 표시한다.
+    const overlay = document.createElement('div');
+    overlay.className = 'tube-youtube__overlay';
+    overlay.innerHTML = `
+      <button class="tube-youtube__center-btn" aria-label="재생/일시정지">
+        <span class="tube-youtube__center-icon tube-youtube__center-icon--play">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><polygon points="16,10 40,24 16,38"/></svg>
+        </span>
+        <span class="tube-youtube__center-icon tube-youtube__center-icon--pause">
+          <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><rect x="12" y="10" width="8" height="28"/><rect x="28" y="10" width="8" height="28"/></svg>
+        </span>
+      </button>
+    `;
+    overlay.addEventListener('click', () => {
+      if (this.state === YT_STATES.PLAYING) {
+        this.pause();
+      } else {
+        this.play();
+      }
+    });
+    playerWrapper.appendChild(overlay);
+    this._overlayEl = overlay;
+
+    container.appendChild(playerWrapper);
+
+    // 컨트롤 영역
+    this._controlsEl = document.createElement('div');
+    this._controlsEl.className = 'tube-youtube__controls';
+    container.appendChild(this._controlsEl);
+
+    // YouTube API 로드 후 플레이어 생성
+    this.state = YT_STATES.LOADING;
+    await loadYouTubeAPI();
+
+    return new Promise((resolve) => {
+      this._ytPlayer = new window.YT.Player(playerTarget.id, {
+        videoId: this.videoId,
+        width: '100%',
+        height: '100%',
+        playerVars: {
+          autoplay: this.options.autoplay ? 1 : 0,
+          controls: 0,           // 기본 YouTube 컨트롤 숨김
+          rel: 0,                // 관련 영상 비활성
+          fs: 0,                 // YouTube 기본 전체화면 버튼 숨김
+          modestbranding: 1,     // YouTube 로고 최소화
+          iv_load_policy: 3,     // 어노테이션 숨김
+          playsinline: 1,        // 모바일 인라인 재생
+          disablekb: 1,          // YouTube 기본 키보드 단축키 비활성
+          enablejsapi: 1,        // JS API 활성
+          origin: window.location.origin,   // postMessage 보안 origin
+          widget_referrer: window.location.href,
+        },
+        events: {
+          onReady: (event) => {
+            this._playerEl = container.querySelector('iframe');
+            this.state = YT_STATES.READY;
+
+            if (this.options.muted) {
+              this._ytPlayer.mute();
+            }
+
+            this.emit('video:ready', this);
+            this._mountControls();
+            resolve(this);
+          },
+          onStateChange: (event) => {
+            const newState = YT_STATE_MAP[event.data] || YT_STATES.UNSTARTED;
+            this.state = newState;
+            this.emit('video:statechange', newState);
+
+            if (newState === YT_STATES.PLAYING) {
+              this._posterEl?.classList.add('tube-youtube__poster--hide');
+              this._overlayEl?.classList.add('tube-youtube__overlay--playing');
+              this._overlayEl?.classList.remove('tube-youtube__overlay--paused');
+              this.emit('video:play');
+              this._startProgressTracking();
+            } else if (newState === YT_STATES.PAUSED) {
+              this._posterEl?.classList.remove('tube-youtube__poster--hide');
+              this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
+              this._overlayEl?.classList.add('tube-youtube__overlay--paused');
+              this.emit('video:pause');
+              this._stopProgressTracking();
+            } else if (newState === YT_STATES.ENDED) {
+              this._posterEl?.classList.remove('tube-youtube__poster--hide');
+              this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
+              this._overlayEl?.classList.add('tube-youtube__overlay--paused');
+              this.emit('video:ended');
+              this._stopProgressTracking();
+            } else if (newState === YT_STATES.BUFFERING) {
+              this.emit('video:buffering');
+            }
+          },
+          onError: (event) => {
+            this.emit('video:error', event.data);
+          },
+        },
+      });
+    });
+  }
+
+  _mountControls() {
+    if (!this._controlsEl) return;
+
+    // 동적으로 컨트롤 임포트 및 마운트
+    const controlMap = {
+      play: () => import('../controls/PlayPause.js').then((m) => m.PlayPause),
+      progress: () => import('../controls/ProgressBar.js').then((m) => m.ProgressBar),
+      time: () => import('../controls/TimeDisplay.js').then((m) => m.TimeDisplay),
+      mute: () => import('../controls/Mute.js').then((m) => m.Mute),
+      fullscreen: () => import('../controls/Fullscreen.js').then((m) => m.Fullscreen),
+      'youtube-link': () => import('../controls/YouTubeLink.js').then((m) => m.YouTubeLink),
+    };
+
+    // 좌측 그룹과 우측 그룹 분리
+    const leftGroup = document.createElement('div');
+    leftGroup.className = 'tube-youtube__controls-left';
+    const rightGroup = document.createElement('div');
+    rightGroup.className = 'tube-youtube__controls-right';
+    this._controlsEl.appendChild(leftGroup);
+    this._controlsEl.appendChild(rightGroup);
+
+    const leftControls = ['play', 'time'];
+    const centerControls = ['progress'];
+    const rightControls = ['mute', 'fullscreen', 'youtube-link'];
+
+    this.options.controls.forEach(async (name) => {
+      const loader = controlMap[name];
+      if (!loader) return;
+
+      const ControlClass = await loader();
+      const instance = new ControlClass(this);
+      this._controlInstances.push(instance);
+
+      if (name === 'progress') {
+        // 프로그레스 바는 컨트롤 바 위에 별도 배치
+        const progressWrapper = document.createElement('div');
+        progressWrapper.className = 'tube-youtube__progress-wrap';
+        this._controlsEl.insertBefore(progressWrapper, leftGroup);
+        instance.mount(progressWrapper);
+      } else if (rightControls.includes(name)) {
+        instance.mount(rightGroup);
+      } else {
+        instance.mount(leftGroup);
+      }
+    });
+  }
+
+  _startProgressTracking() {
+    this._stopProgressTracking();
+    this._progressTimer = setInterval(() => {
+      if (!this._ytPlayer || !this._ytPlayer.getCurrentTime) return;
+      const current = this._ytPlayer.getCurrentTime();
+      const duration = this._ytPlayer.getDuration();
+      const percent = duration > 0 ? (current / duration) * 100 : 0;
+      this.emit('video:progress', { current, duration, percent });
+    }, 250);
+  }
+
+  _stopProgressTracking() {
+    if (this._progressTimer) {
+      clearInterval(this._progressTimer);
+      this._progressTimer = null;
+    }
+  }
+
+  // === Public API ===
+
+  play() {
+    if (this._ytPlayer) this._ytPlayer.playVideo();
+    return this;
+  }
+
+  pause() {
+    if (this._ytPlayer) this._ytPlayer.pauseVideo();
+    return this;
+  }
+
+  stop() {
+    if (this._ytPlayer) this._ytPlayer.stopVideo();
+    return this;
+  }
+
+  seek(seconds) {
+    if (this._ytPlayer) this._ytPlayer.seekTo(seconds, true);
+    return this;
+  }
+
+  mute() {
+    if (this._ytPlayer) this._ytPlayer.mute();
+    this.emit('video:mute', true);
+    return this;
+  }
+
+  unmute() {
+    if (this._ytPlayer) this._ytPlayer.unMute();
+    this.emit('video:mute', false);
+    return this;
+  }
+
+  isMuted() {
+    return this._ytPlayer ? this._ytPlayer.isMuted() : false;
+  }
+
+  setVolume(value) {
+    if (this._ytPlayer) this._ytPlayer.setVolume(value);
+    return this;
+  }
+
+  getVolume() {
+    return this._ytPlayer ? this._ytPlayer.getVolume() : 0;
+  }
+
+  getCurrentTime() {
+    return this._ytPlayer ? this._ytPlayer.getCurrentTime() : 0;
+  }
+
+  getDuration() {
+    return this._ytPlayer ? this._ytPlayer.getDuration() : 0;
+  }
+
+  getState() {
+    return this.state;
+  }
+
+  getContainerEl() {
+    return this._containerEl;
+  }
+
+  destroy() {
+    this._stopProgressTracking();
+    this._controlInstances.forEach((c) => {
+      if (c.destroy) c.destroy();
+    });
+    this._controlInstances = [];
+    if (this._ytPlayer) {
+      this._ytPlayer.destroy();
+      this._ytPlayer = null;
+    }
+    if (this._containerEl) {
+      this._containerEl.innerHTML = '';
+    }
+    this.removeAllListeners();
+    this._mounted = false;
+  }
+}

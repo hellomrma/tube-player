@@ -1,0 +1,11 @@
+[data-tube-theme="dark"] {
+  --tube-layer-bg: rgba(0, 0, 0, 0.95);
+  --tube-dim-bg: rgba(0, 0, 0, 0.85);
+  --tube-control-color: #ffffff;
+  --tube-control-hover: rgba(255, 255, 255, 0.8);
+  --tube-progress-bg: rgba(255, 255, 255, 0.2);
+  --tube-progress-fill: #ff0000;
+  --tube-progress-thumb: #ffffff;
+  --tube-spinner-color: #ffffff;
+  --tube-close-color: #ffffff;
+}

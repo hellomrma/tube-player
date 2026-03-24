@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubePlayer — Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    h1 span {
+      font-weight: 600;
+    }
+
+    p.desc {
+      color: #888;
+      font-size: 14px;
+      max-width: 480px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .demo-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .shortcuts {
+      margin-top: 32px;
+      padding: 20px 28px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      color: #666;
+    }
+
+    .shortcuts h3 {
+      color: #aaa;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .shortcuts ul {
+      list-style: none;
+      display: grid;
+      gap: 6px;
+    }
+
+    .shortcuts kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1><span>TubePlayer</span> Demo</h1>
+  <p class="desc">
+    커스텀 YouTube 팝업 플레이어 라이브러리.<br />
+    아래 버튼을 클릭하면 팝업이 열립니다.
+  </p>
+
+  <div class="demo-buttons">
+    <button class="btn" data-tube-open="trailer">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
+      트레일러 보기
+    </button>
+  </div>
+
+  <div data-tube-layer="trailer"
+       data-tube-close-on-dim="true"
+       data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc"
+         data-tube-autoplay="true"
+         data-tube-theme="dark"
+         data-tube-controls="mute,fullscreen">
+    </div>
+  </div>
+
+  <div class="shortcuts">
+    <h3>Keyboard Shortcuts</h3>
+    <ul>
+      <li><kbd>Space</kbd> 재생 / 일시정지</li>
+      <li><kbd>Esc</kbd> 레이어 닫기</li>
+      <li><kbd>M</kbd> 음소거 토글</li>
+      <li><kbd>F</kbd> 전체화면 토글</li>
+    </ul>
+  </div>
+
+  <script type="module">
+    import TubePlayer from '../src/index.js';
+
+    TubePlayer.init();
+
+    // 이벤트 리스닝 예시
+    const trailer = TubePlayer.get('trailer');
+    if (trailer) {
+      trailer.on('layer:open', () => console.log('[demo] 레이어 열림'));
+      trailer.on('layer:close', () => console.log('[demo] 레이어 닫힘'));
+      trailer.on('video:play', () => console.log('[demo] 재생 시작'));
+      trailer.on('video:progress', ({ percent }) => {
+        if (Math.floor(percent) % 10 === 0) {
+          console.log(`[demo] ${Math.floor(percent)}% 재생됨`);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

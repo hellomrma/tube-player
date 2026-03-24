@@ -1,0 +1,338 @@
+/* =============================================
+   tubeplayer — Base Styles
+   ============================================= */
+
+/* === Reset === */
+.tube-layer *,
+.tube-youtube * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === KitLayer === */
+.tube-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.tube-layer[data-tube-state="opening"],
+.tube-layer[data-tube-state="active"] {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.tube-layer[data-tube-state="closing"] {
+  pointer-events: none;
+  visibility: visible;
+}
+
+/* Dim */
+.tube-layer__dim {
+  position: absolute;
+  inset: 0;
+  background: var(--tube-dim-bg, rgba(0, 0, 0, 0.85));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tube-layer[data-tube-state="active"] .tube-layer__dim {
+  opacity: 1;
+}
+
+.tube-layer[data-tube-state="closing"] .tube-layer__dim {
+  opacity: 0;
+}
+
+/* Contents Wrap */
+.tube-layer__contents-wrap {
+  position: relative;
+  z-index: 1;
+  width: 1280px;
+  max-width: 90%;
+  outline: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tube-layer[data-tube-state="active"] .tube-layer__contents-wrap {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tube-layer[data-tube-state="closing"] .tube-layer__contents-wrap {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Slide Animation */
+.tube-layer--slide .tube-layer__contents-wrap {
+  transform: translateY(30px);
+}
+
+.tube-layer--slide[data-tube-state="active"] .tube-layer__contents-wrap {
+  transform: translateY(0);
+}
+
+.tube-layer--slide[data-tube-state="closing"] .tube-layer__contents-wrap {
+  transform: translateY(30px);
+}
+
+/* Zoom Animation */
+.tube-layer--zoom .tube-layer__contents-wrap {
+  transform: scale(0.5);
+}
+
+.tube-layer--zoom[data-tube-state="active"] .tube-layer__contents-wrap {
+  transform: scale(1);
+}
+
+.tube-layer--zoom[data-tube-state="closing"] .tube-layer__contents-wrap {
+  transform: scale(0.5);
+}
+
+/* Close Button */
+.tube-layer__close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--tube-close-color, #fff);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.tube-layer__close:hover {
+  opacity: 1;
+}
+
+/* === KitYouTube === */
+.tube-youtube {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tube-youtube__player {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+}
+
+.tube-youtube__player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* 포스터 — YouTube 썸네일로 iframe을 덮어 기본 UI 노출 차단 */
+.tube-youtube__poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+/* 재생 중일 때 포스터 숨김 */
+.tube-youtube__poster--hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 오버레이 — 항상 최상위에서 마우스를 가로채고, 중앙 재생/일시정지 버튼 표시 */
+.tube-youtube__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 중앙 버튼 */
+.tube-youtube__center-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s;
+  pointer-events: none;
+}
+
+.tube-youtube__center-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* 아이콘 토글 기본 — 둘 다 숨김 */
+.tube-youtube__center-icon {
+  display: none;
+}
+
+/* --- 재생 중: hover 시 일시정지 아이콘 표시 --- */
+.tube-youtube__overlay--playing:hover .tube-youtube__center-btn {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.tube-youtube__overlay--playing .tube-youtube__center-icon--pause {
+  display: flex;
+}
+
+/* --- 일시정지/종료: 항상 재생 아이콘 표시 --- */
+.tube-youtube__overlay--paused .tube-youtube__center-btn {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.tube-youtube__overlay--paused .tube-youtube__center-icon--play {
+  display: flex;
+}
+
+/* === Controls === */
+.tube-youtube__controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0 12px 8px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  z-index: 3;
+}
+
+.tube-youtube__progress-wrap {
+  width: 100%;
+  padding: 0 4px;
+}
+
+.tube-youtube__controls-left,
+.tube-youtube__controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tube-youtube__controls-left {
+  flex: 1;
+}
+
+.tube-youtube__controls-right {
+  margin-left: auto;
+}
+
+/* Control Base */
+.tube-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--tube-control-color, #fff);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s, opacity 0.2s;
+  text-decoration: none;
+}
+
+.tube-control:hover {
+  color: var(--tube-control-hover, rgba(255, 255, 255, 0.8));
+}
+
+button.tube-control:focus-visible,
+a.tube-control:focus-visible {
+  outline: 2px solid var(--tube-control-color, #fff);
+  outline-offset: 2px;
+}
+
+/* Time Display */
+.tube-control--time {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Progress Bar */
+.tube-control--progress {
+  width: 100%;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.tube-progress__track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: var(--tube-progress-bg, rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
+  transition: height 0.15s;
+}
+
+.tube-control--progress:hover .tube-progress__track,
+.tube-control--progress.is-dragging .tube-progress__track {
+  height: 5px;
+}
+
+.tube-progress__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--tube-progress-fill, #ff0000);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.tube-progress__thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 12px;
+  height: 12px;
+  background: var(--tube-progress-thumb, #fff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s;
+}
+
+.tube-control--progress:hover .tube-progress__thumb,
+.tube-control--progress.is-dragging .tube-progress__thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
