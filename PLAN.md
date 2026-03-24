@@ -15,7 +15,7 @@
 
 - 프레임워크 비종속 (Vanilla JS 코어)
 - 커스텀 UI 컨트롤 완전 제어 가능
-- 에이전시 프로젝트 즉시 적용 가능한 수준의 완성도
+- 에이전시 프로젝트 즉시 적용 가능한 수준의 완성도 (모바일 대응 완료)
 - Vercel을 통한 데모 호스팅 및 npm 패키지 배포
 
 ### 1.3 라이브러리 정보
@@ -25,7 +25,7 @@
 | 패키지명 | `tubeplayer` |
 | 버전 | `0.1.0` (MVP) |
 | 라이선스 | MIT |
-| 지원 환경 | Chrome, Firefox, Safari, Edge (최신 2버전) |
+| 지원 환경 | Chrome, Firefox, Safari, Edge (최신 2버전) + 모바일 웹 |
 | 번들러 | Vite (ESM + CJS + UMD 빌드) |
 
 ---
@@ -46,7 +46,7 @@ tube-player/
 │   │   ├── Mute.js               # 음소거 토글
 │   │   └── Fullscreen.js         # 전체화면 토글
 │   ├── styles/
-│   │   ├── base.css              # 공통 기본 스타일
+│   │   ├── base.css              # 공통 기본 스타일 (반응형 포함)
 │   │   └── themes/
 │   │       └── dark.css          # 다크 테마
 │   └── index.js                  # 라이브러리 진입점
@@ -55,6 +55,8 @@ tube-player/
 ├── tests/                        # 테스트 코드
 ├── vite.config.js
 ├── package.json
+├── GEMINI.md                     # 엔지니어링 원칙
+├── CLAUDE.md                     # 컨텍스트 문서
 └── README.md
 ```
 
@@ -76,7 +78,7 @@ tube-player/
 
 **주요 기능**
 - YouTube 기본 UI 완전 차단 (Poster + Overlay)
-- `video:play`, `video:progress` 등 다양한 이벤트 브로드캐스팅
+- 모바일 전체화면 최적화 (`:fullscreen` 스타일)
 - 레이어 재오픈 시 0초부터 재생 (`seek(0)`)
 
 ---
@@ -92,6 +94,8 @@ tube-player/
 - [x] 다크 테마 CSS 및 CSS 변수 시스템
 - [x] 데이터 속성 기반 자동 초기화 (`TubePlayer.init()`)
 - [x] Vercel 배포를 위한 빌드 설정 최적화
+- [x] **모바일 최적화 (반응형 로고, 유동적 폰트, 터치 대응 레이아웃)**
+- [x] **모바일 전체화면 버그 수정**
 
 ### Phase 2 — 확장 (예정)
 
