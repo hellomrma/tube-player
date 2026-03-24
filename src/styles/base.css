@@ -2,6 +2,10 @@
    tubeplayer — Base Styles
    ============================================= */
 
+:root {
+  --tube-animation-duration: 300ms;
+}
+
 /* === Reset === */
 .tube-layer *,
 .tube-youtube * {
@@ -39,7 +43,7 @@
   inset: 0;
   background: var(--tube-dim-bg, rgba(0, 0, 0, 0.85));
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--tube-animation-duration) ease;
 }
 
 .tube-layer[data-tube-state="active"] .tube-layer__dim {
@@ -59,7 +63,7 @@
   outline: none;
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity var(--tube-animation-duration) ease, transform var(--tube-animation-duration) ease;
 }
 
 .tube-layer[data-tube-state="active"] .tube-layer__contents-wrap {
@@ -364,5 +368,55 @@ a.tube-control:focus-visible {
 
 .tube-control--progress:hover .tube-progress__thumb,
 .tube-control--progress.is-dragging .tube-progress__thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Volume Slider */
+.tube-control--volume {
+  width: 72px;
+  padding: 8px 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tube-volume__track {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background: var(--tube-progress-bg, rgba(255, 255, 255, 0.2));
+  border-radius: 2px;
+  transition: height 0.15s;
+}
+
+.tube-control--volume:hover .tube-volume__track,
+.tube-control--volume.is-dragging .tube-volume__track {
+  height: 5px;
+}
+
+.tube-volume__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--tube-progress-fill, #ff0000);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.tube-volume__thumb {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 12px;
+  height: 12px;
+  background: var(--tube-progress-thumb, #fff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.15s;
+}
+
+.tube-control--volume:hover .tube-volume__thumb,
+.tube-control--volume.is-dragging .tube-volume__thumb {
   transform: translate(-50%, -50%) scale(1);
 }

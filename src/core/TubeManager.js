@@ -56,34 +56,40 @@ class TubeManager {
         const controls = controlsAttr
           ? controlsAttr.split(',').map((s) => s.trim())
           : undefined;
+        const restartOnOpenAttr = ytEl.getAttribute('data-tube-restart-on-open');
+        const restartOnOpen = restartOnOpenAttr !== null
+          ? restartOnOpenAttr !== 'false'
+          : globalOptions.restartOnOpen !== undefined
+            ? globalOptions.restartOnOpen
+            : true;
 
         const player = new TubeYouTube(videoId, {
           autoplay: globalOptions.autoplay !== undefined ? globalOptions.autoplay : autoplay,
           muted,
           theme: typeof theme === 'string' ? theme : 'dark',
           controls,
+          restartOnOpen,
         });
         this._players.set(id, player);
 
-        // 레이어 열릴 때 플레이어 마운트
-        let mounted = false;
+        let shortcutsBound = false;
+
+        // 레이어 열릴 때 플레이어 마운트 (player._mounted로 상태 관리)
         layer.on('layer:open', async () => {
-          if (!mounted) {
+          if (!player._mounted) {
             await player.mount(layer.contentsEl);
-            mounted = true;
-          } else {
+          } else if (player.options.restartOnOpen !== false) {
             player.seek(0).play();
+          }
+          if (!shortcutsBound) {
+            shortcutsBound = true;
+            this._bindPlayerShortcuts(layer, player);
           }
         });
 
         // 레이어 닫힐 때 일시정지
         layer.on('layer:close', () => {
           player.pause();
-        });
-
-        // 키보드 단축키 — 레이어 활성 시
-        layer.on('layer:open', () => {
-          this._bindPlayerShortcuts(layer, player);
         });
       }
     });

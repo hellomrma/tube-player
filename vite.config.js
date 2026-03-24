@@ -14,13 +14,8 @@ export default defineConfig(({ mode }) => {
           fileName: (format) => `tubeplayer.${format}.js`,
         },
         rollupOptions: {
-          external: ['react', 'vue'],
           output: {
             exports: 'named',
-            globals: {
-              react: 'React',
-              vue: 'Vue',
-            },
           },
         },
       },

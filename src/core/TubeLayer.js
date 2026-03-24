@@ -7,7 +7,17 @@ const STATES = {
   CLOSING: 'closing',
 };
 
-const ANIMATION_DURATION = 300;
+// CSS --tube-animation-duration 변수와 동기화. 기본값 300ms
+function getAnimationDuration() {
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue('--tube-animation-duration')
+    .trim();
+  const ms = parseInt(raw, 10);
+  return isNaN(ms) ? 300 : ms;
+}
+
+// 열린 레이어 수를 추적해 body 스크롤 잠금/해제를 안전하게 처리
+let _openCount = 0;
 
 export class TubeLayer extends EventEmitter {
   /**
@@ -133,7 +143,8 @@ export class TubeLayer extends EventEmitter {
     this.state = STATES.OPENING;
     this.el.setAttribute('data-tube-state', STATES.OPENING);
 
-    // body 스크롤 잠금
+    // body 스크롤 잠금 (다중 레이어 대응)
+    _openCount++;
     document.body.style.overflow = 'hidden';
 
     // 키보드 이벤트
@@ -166,7 +177,8 @@ export class TubeLayer extends EventEmitter {
       this.state = STATES.IDLE;
       this.el.setAttribute('data-tube-state', STATES.IDLE);
 
-      document.body.style.overflow = '';
+      _openCount = Math.max(0, _openCount - 1);
+      if (_openCount === 0) document.body.style.overflow = '';
       document.removeEventListener('keydown', this._boundKeydown);
 
       // 포커스 복원
@@ -175,7 +187,7 @@ export class TubeLayer extends EventEmitter {
       }
 
       this.emit('layer:close');
-    }, ANIMATION_DURATION);
+    }, getAnimationDuration());
 
     return this;
   }
@@ -194,7 +206,7 @@ export class TubeLayer extends EventEmitter {
       this.removeAllListeners();
       this.el = null;
       this._contentsEl = null;
-    }, ANIMATION_DURATION + 50);
+    }, getAnimationDuration() + 50);
   }
 
   isActive() {

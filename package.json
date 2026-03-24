@@ -1,10 +1,11 @@
 {
   "name": "tubeplayer",
   "version": "0.1.0",
-  "description": "커스텀 YouTube 팝업 플레이어 라이브러리 (Vanilla JS)",
+  "description": "Vanilla JS custom YouTube popup player with fully custom controls and mobile optimization",
   "type": "module",
   "main": "dist/tubeplayer.cjs.js",
   "module": "dist/tubeplayer.es.js",
+  "types": "src/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/tubeplayer.es.js",
@@ -13,7 +14,10 @@
     "./style.css": "./dist/style.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/index.d.ts",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "vite",
@@ -26,6 +30,7 @@
   },
   "devDependencies": {
     "eslint": "^9.0.0",
+    "jsdom": "^24.0.0",
     "prettier": "^3.2.0",
     "vite": "^5.0.0",
     "vitest": "^1.0.0"

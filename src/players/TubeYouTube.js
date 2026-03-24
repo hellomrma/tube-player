@@ -29,7 +29,7 @@ function loadYouTubeAPI() {
     return Promise.resolve();
   }
 
-  apiLoadPromise = new Promise((resolve) => {
+  apiLoadPromise = new Promise((resolve, reject) => {
     const existingCallback = window.onYouTubeIframeAPIReady;
     window.onYouTubeIframeAPIReady = () => {
       if (existingCallback) existingCallback();
@@ -38,6 +38,10 @@ function loadYouTubeAPI() {
 
     const script = document.createElement('script');
     script.src = 'https://www.youtube.com/iframe_api';
+    script.onerror = () => {
+      apiLoadPromise = null;
+      reject(new Error('YouTube IFrame API 로드 실패'));
+    };
     document.head.appendChild(script);
   });
 
@@ -45,6 +49,15 @@ function loadYouTubeAPI() {
 }
 
 export class TubeYouTube extends EventEmitter {
+  /**
+   * 커스텀 컨트롤 등록 (전역)
+   * @param {string} name - data-tube-controls에서 사용할 이름
+   * @param {new (player: TubeYouTube) => { mount(container: HTMLElement): void; destroy?(): void }} ControlClass
+   */
+  static registerControl(name, ControlClass) {
+    TubeYouTube._customControls[name] = () => Promise.resolve(ControlClass);
+  }
+
   /**
    * @param {string} videoId - YouTube 비디오 ID
    * @param {object} options
@@ -64,6 +77,7 @@ export class TubeYouTube extends EventEmitter {
       muted: false,
       theme: 'dark',
       controls: ['mute', 'fullscreen'],
+      restartOnOpen: true,
       ...options,
     };
     this.state = YT_STATES.UNSTARTED;
@@ -102,10 +116,10 @@ export class TubeYouTube extends EventEmitter {
     playerWrapper.appendChild(playerTarget);
 
     // 포스터 — YouTube 썸네일로 iframe을 덮어 일시정지/종료 시 기본 UI 노출 차단
+    // maxresdefault → sddefault → hqdefault 순으로 fallback
     this._posterEl = document.createElement('div');
     this._posterEl.className = 'tube-youtube__poster';
-    this._posterEl.style.background =
-      `url("https://img.youtube.com/vi/${this.videoId}/sddefault.jpg") 50% 50% / cover no-repeat #000`;
+    this._setPosterImage();
     playerWrapper.appendChild(this._posterEl);
 
     // 오버레이 — 항상 최상위에서 마우스 이벤트를 가로채 YouTube hover UI 차단
@@ -113,7 +127,7 @@ export class TubeYouTube extends EventEmitter {
     const overlay = document.createElement('div');
     overlay.className = 'tube-youtube__overlay';
     overlay.innerHTML = `
-      <button class="tube-youtube__center-btn" aria-label="재생/일시정지">
+      <button class="tube-youtube__center-btn" aria-label="재생" aria-pressed="false">
         <span class="tube-youtube__center-icon tube-youtube__center-icon--play">
           <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><polygon points="16,10 40,24 16,38"/></svg>
         </span>
@@ -122,6 +136,7 @@ export class TubeYouTube extends EventEmitter {
         </span>
       </button>
     `;
+    this._centerBtn = overlay.querySelector('.tube-youtube__center-btn');
     overlay.addEventListener('click', () => {
       if (this.state === YT_STATES.PLAYING) {
         this.pause();
@@ -141,9 +156,15 @@ export class TubeYouTube extends EventEmitter {
 
     // YouTube API 로드 후 플레이어 생성
     this.state = YT_STATES.LOADING;
-    await loadYouTubeAPI();
+    try {
+      await loadYouTubeAPI();
+    } catch (err) {
+      this.state = YT_STATES.UNSTARTED;
+      this.emit('video:error', err);
+      throw err;
+    }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this._ytPlayer = new window.YT.Player(playerTarget.id, {
         videoId: this.videoId,
         width: '100%',
@@ -183,18 +204,30 @@ export class TubeYouTube extends EventEmitter {
               this._posterEl?.classList.add('tube-youtube__poster--hide');
               this._overlayEl?.classList.add('tube-youtube__overlay--playing');
               this._overlayEl?.classList.remove('tube-youtube__overlay--paused');
+              if (this._centerBtn) {
+                this._centerBtn.setAttribute('aria-label', '일시정지');
+                this._centerBtn.setAttribute('aria-pressed', 'true');
+              }
               this.emit('video:play');
               this._startProgressTracking();
             } else if (newState === YT_STATES.PAUSED) {
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
+              if (this._centerBtn) {
+                this._centerBtn.setAttribute('aria-label', '재생');
+                this._centerBtn.setAttribute('aria-pressed', 'false');
+              }
               this.emit('video:pause');
               this._stopProgressTracking();
             } else if (newState === YT_STATES.ENDED) {
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
+              if (this._centerBtn) {
+                this._centerBtn.setAttribute('aria-label', '재생');
+                this._centerBtn.setAttribute('aria-pressed', 'false');
+              }
               this.emit('video:ended');
               this._stopProgressTracking();
             } else if (newState === YT_STATES.BUFFERING) {
@@ -202,11 +235,44 @@ export class TubeYouTube extends EventEmitter {
             }
           },
           onError: (event) => {
-            this.emit('video:error', event.data);
+            const errorMessages = {
+              2: '잘못된 영상 ID',
+              5: 'HTML5 플레이어 오류',
+              100: '영상을 찾을 수 없음 (삭제 또는 비공개)',
+              101: '영상 삽입이 허용되지 않음',
+              150: '영상 삽입이 허용되지 않음',
+            };
+            const message = errorMessages[event.data] || `알 수 없는 오류 (코드: ${event.data})`;
+            this.emit('video:error', { code: event.data, message });
+            reject(new Error(message));
           },
         },
       });
     });
+  }
+
+  _setPosterImage() {
+    const qualities = ['maxresdefault', 'sddefault', 'hqdefault'];
+    let idx = 0;
+
+    const tryNext = () => {
+      if (idx >= qualities.length) return;
+      const quality = qualities[idx++];
+      const url = `https://img.youtube.com/vi/${this.videoId}/${quality}.jpg`;
+      const img = new Image();
+      img.onload = () => {
+        // YouTube는 존재하지 않는 썸네일에도 120×90 플레이스홀더를 반환하므로 필터링
+        if (img.naturalWidth <= 120) {
+          tryNext();
+        } else {
+          this._posterEl.style.background = `url("${url}") 50% 50% / cover no-repeat #000`;
+        }
+      };
+      img.onerror = tryNext;
+      img.src = url;
+    };
+
+    tryNext();
   }
 
   _mountControls() {
@@ -214,12 +280,14 @@ export class TubeYouTube extends EventEmitter {
 
     // 동적으로 컨트롤 임포트 및 마운트
     const controlMap = {
+      ...TubeYouTube._customControls,
       play: () => import('../controls/PlayPause.js').then((m) => m.PlayPause),
       progress: () => import('../controls/ProgressBar.js').then((m) => m.ProgressBar),
       time: () => import('../controls/TimeDisplay.js').then((m) => m.TimeDisplay),
       mute: () => import('../controls/Mute.js').then((m) => m.Mute),
       fullscreen: () => import('../controls/Fullscreen.js').then((m) => m.Fullscreen),
       'youtube-link': () => import('../controls/YouTubeLink.js').then((m) => m.YouTubeLink),
+      volume: () => import('../controls/Volume.js').then((m) => m.Volume),
     };
 
     // 좌측 그룹과 우측 그룹 분리
@@ -230,30 +298,31 @@ export class TubeYouTube extends EventEmitter {
     this._controlsEl.appendChild(leftGroup);
     this._controlsEl.appendChild(rightGroup);
 
-    const leftControls = ['play', 'time'];
-    const centerControls = ['progress'];
-    const rightControls = ['mute', 'fullscreen', 'youtube-link'];
+    const rightControls = ['mute', 'volume', 'fullscreen', 'youtube-link'];
 
-    this.options.controls.forEach(async (name) => {
-      const loader = controlMap[name];
-      if (!loader) return;
+    // 순서를 보장하기 위해 순차적으로 마운트
+    (async () => {
+      for (const name of this.options.controls) {
+        const loader = controlMap[name];
+        if (!loader) continue;
 
-      const ControlClass = await loader();
-      const instance = new ControlClass(this);
-      this._controlInstances.push(instance);
+        const ControlClass = await loader();
+        const instance = new ControlClass(this);
+        this._controlInstances.push(instance);
 
-      if (name === 'progress') {
-        // 프로그레스 바는 컨트롤 바 위에 별도 배치
-        const progressWrapper = document.createElement('div');
-        progressWrapper.className = 'tube-youtube__progress-wrap';
-        this._controlsEl.insertBefore(progressWrapper, leftGroup);
-        instance.mount(progressWrapper);
-      } else if (rightControls.includes(name)) {
-        instance.mount(rightGroup);
-      } else {
-        instance.mount(leftGroup);
+        if (name === 'progress') {
+          // 프로그레스 바는 컨트롤 바 위에 별도 배치
+          const progressWrapper = document.createElement('div');
+          progressWrapper.className = 'tube-youtube__progress-wrap';
+          this._controlsEl.insertBefore(progressWrapper, leftGroup);
+          instance.mount(progressWrapper);
+        } else if (rightControls.includes(name)) {
+          instance.mount(rightGroup);
+        } else {
+          instance.mount(leftGroup);
+        }
       }
-    });
+    })();
   }
 
   _startProgressTracking() {
@@ -354,3 +423,6 @@ export class TubeYouTube extends EventEmitter {
     this._mounted = false;
   }
 }
+
+// 전역 커스텀 컨트롤 레지스트리
+TubeYouTube._customControls = {};
