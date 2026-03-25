@@ -169,6 +169,98 @@
       background: linear-gradient(90deg, transparent, var(--border), transparent);
     }
 
+    /* ─── Features Demo ─────────────────────────── */
+    .features-demo {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.25s;
+    }
+    .feature-card:hover { border-color: rgba(255,255,255,0.15); }
+    .feature-card__badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      align-self: flex-start;
+    }
+    .badge--popup   { color: var(--accent);  background: var(--accent-dim); }
+    .badge--play    { color: #79b8ff;        background: rgba(121,184,255,0.12); }
+    .badge--control { color: #4ade80;        background: rgba(74,222,128,0.12); }
+    .badge--custom  { color: #f59e0b;        background: rgba(245,158,11,0.12); }
+    .feature-card__title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .feature-card__desc {
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      line-height: 1.6;
+      flex: 1;
+    }
+    .feature-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .demo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .demo-btn svg { width:14px; height:14px; fill:var(--accent); flex-shrink:0; }
+    .feature-card__snippet {
+      font-family: 'SF Mono','Consolas','Menlo',monospace;
+      font-size: 11.5px;
+      color: #e5b567;
+      background: rgba(229,181,103,0.06);
+      border: 1px solid rgba(229,181,103,0.12);
+      padding: 6px 10px;
+      border-radius: 6px;
+      word-break: break-all;
+    }
+    .features-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: 56px;
+    }
+    @media (max-width: 768px) { .features-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 500px) { .features-grid { grid-template-columns: 1fr; } }
+
     /* ─── Get Started ───────────────────────────────────── */
 
     .get-started {
@@ -611,9 +703,126 @@
       </a>
     </div>
 
-    <div class="scroll-hint" onclick="document.getElementById('get-started').scrollIntoView({behavior:'smooth'})">
-      Get Started
+    <div class="scroll-hint" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+      <span data-i18n="scroll.hint"></span>
       <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ─── Feature Demos ─────────────────────────────────── -->
+  <section class="features-demo" id="features">
+    <div class="gs-header">
+      <span class="gs-label">Features</span>
+      <h2 data-i18n="fd.title"></h2>
+      <p data-i18n="fd.desc"></p>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- Card 1: Popup Animations -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--popup">POPUP</span>
+        <div class="feature-card__title" data-i18n="fd.anim.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.anim.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-fade">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            Fade
+          </button>
+          <button class="demo-btn" data-tube-open="demo-slide">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            Slide
+          </button>
+          <button class="demo-btn" data-tube-open="demo-zoom">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            Zoom
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-animation="fade | slide | zoom"</div>
+      </div>
+
+      <!-- Card 2: Loop Playback -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--play">PLAYBACK</span>
+        <div class="feature-card__title" data-i18n="fd.loop.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.loop.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-loop">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.open"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-loop="true"</div>
+      </div>
+
+      <!-- Card 3: Start Time -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--play">PLAYBACK</span>
+        <div class="feature-card__title" data-i18n="fd.start.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.start.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-start">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.open"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-start="45"</div>
+      </div>
+
+      <!-- Card 4: Auto-close on End -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--play">PLAYBACK</span>
+        <div class="feature-card__title" data-i18n="fd.closeend.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.closeend.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-close-end">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.open"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-close-on-end="true"</div>
+      </div>
+
+      <!-- Card 5: Control Customization -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--control">CONTROLS</span>
+        <div class="feature-card__title" data-i18n="fd.ctrl.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.ctrl.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-ctrl-min">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.ctrl.min"></span>
+          </button>
+          <button class="demo-btn" data-tube-open="demo-ctrl-full">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.ctrl.full"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-controls="play,progress,time,mute,volume,fullscreen,speed"</div>
+      </div>
+
+      <!-- Card 6: Custom Poster -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--custom">CUSTOM</span>
+        <div class="feature-card__title" data-i18n="fd.poster.title"></div>
+        <div class="feature-card__desc" data-i18n="fd.poster.desc"></div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" data-tube-open="demo-poster">
+            <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            <span data-i18n="fd.open"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-poster="/path/to/image.jpg"</div>
+      </div>
+
+    </div>
+
+    <div class="features-footer">
+      <a href="#get-started" class="btn" onclick="event.preventDefault();document.getElementById('get-started').scrollIntoView({behavior:'smooth'})">
+        Get Started ↓
+      </a>
     </div>
   </section>
 
@@ -830,7 +1039,44 @@ TubePlayer.init();</code></pre>
     &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; Vanilla JS
   </footer>
 
-  <!-- ─── Layer & Player ────────────────────────────────── -->
+  <!-- ─── Layers & Players ──────────────────────────────── -->
+
+  <div data-tube-layer="demo-fade" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen"></div>
+  </div>
+
+  <div data-tube-layer="demo-slide" data-tube-close-on-dim="true" data-tube-animation="slide">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen"></div>
+  </div>
+
+  <div data-tube-layer="demo-zoom" data-tube-close-on-dim="true" data-tube-animation="zoom">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen"></div>
+  </div>
+
+  <div data-tube-layer="demo-loop" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen" data-tube-loop="true"></div>
+  </div>
+
+  <div data-tube-layer="demo-start" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen" data-tube-start="45"></div>
+  </div>
+
+  <div data-tube-layer="demo-close-end" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen" data-tube-start="200" data-tube-close-on-end="true"></div>
+  </div>
+
+  <div data-tube-layer="demo-ctrl-min" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="mute,fullscreen"></div>
+  </div>
+
+  <div data-tube-layer="demo-ctrl-full" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="true" data-tube-theme="dark" data-tube-controls="play,progress,time,mute,volume,fullscreen,speed"></div>
+  </div>
+
+  <div data-tube-layer="demo-poster" data-tube-close-on-dim="true" data-tube-animation="fade">
+    <div data-tube-youtube="B868ddnPpsc" data-tube-autoplay="false" data-tube-theme="dark" data-tube-controls="mute,fullscreen" data-tube-poster="https://picsum.photos/seed/tubeplayer/1280/720"></div>
+  </div>
+
   <div data-tube-layer="trailer"
        data-tube-close-on-dim="true"
        data-tube-animation="fade">
@@ -849,6 +1095,7 @@ TubePlayer.init();</code></pre>
       ko: {
         'hero.desc':   '프레임워크에 구애받지 않는 Vanilla JS 기반의<br />커스텀 YouTube 팝업 플레이어 라이브러리입니다.',
         'hero.open':   '데모 열기',
+        'scroll.hint': '기능 보기',
         'gs.desc':     '몇 줄의 코드로 YouTube 팝업 플레이어를 완성하세요.',
         's1.title':    '설치',
         's1.desc':     'npm 또는 CDN으로 TubePlayer를 프로젝트에 추가합니다.',
@@ -880,6 +1127,23 @@ TubePlayer.init();</code></pre>
         'kb.f':        '전체화면 토글',
         'copy':        '복사',
         'copied':      '복사됨!',
+        'fd.title':       '기능 데모',
+        'fd.desc':        'TubePlayer의 주요 기능을 직접 체험해보세요.',
+        'fd.open':        '데모 열기',
+        'fd.anim.title':  '팝업 애니메이션',
+        'fd.anim.desc':   '레이어를 열고 닫을 때 3가지 애니메이션 중 하나를 선택할 수 있습니다.',
+        'fd.loop.title':  '반복 재생',
+        'fd.loop.desc':   '영상이 끝나면 자동으로 처음부터 다시 재생됩니다.',
+        'fd.start.title': '재생 시작 시간',
+        'fd.start.desc':  '특정 초(45초)부터 재생을 시작합니다.',
+        'fd.closeend.title': '영상 종료 시 자동 닫기',
+        'fd.closeend.desc':  '영상이 끝나면 레이어가 자동으로 닫힙니다. (3:20부터 시작)',
+        'fd.ctrl.title':  '컨트롤 커스터마이징',
+        'fd.ctrl.desc':   '표시할 컨트롤을 원하는 대로 선택하거나 전체를 활성화할 수 있습니다.',
+        'fd.ctrl.min':    '최소',
+        'fd.ctrl.full':   '전체',
+        'fd.poster.title': '커스텀 포스터',
+        'fd.poster.desc':  'YouTube 기본 썸네일 대신 원하는 이미지를 포스터로 사용합니다. 일시정지 시 확인 가능합니다.',
         'code.html':
 `<!-- 열기 버튼 -->
 <button data-tube-open="my-video">영상 보기</button>
@@ -912,6 +1176,7 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
       en: {
         'hero.desc':   'A framework-agnostic Vanilla JS library for<br />custom YouTube popup players.',
         'hero.open':   'Open Demo',
+        'scroll.hint': 'Explore Features',
         'gs.desc':     'Set up a YouTube popup player in just a few lines of code.',
         's1.title':    'Install',
         's1.desc':     'Add TubePlayer to your project via npm or CDN.',
@@ -943,6 +1208,23 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'kb.f':        'Toggle fullscreen',
         'copy':        'Copy',
         'copied':      'Copied!',
+        'fd.title':       'Feature Demos',
+        'fd.desc':        'Try each feature of TubePlayer live.',
+        'fd.open':        'Open Demo',
+        'fd.anim.title':  'Popup Animations',
+        'fd.anim.desc':   'Choose from 3 animation types when opening and closing the layer.',
+        'fd.loop.title':  'Loop Playback',
+        'fd.loop.desc':   'The video automatically restarts from the beginning when it ends.',
+        'fd.start.title': 'Start Time',
+        'fd.start.desc':  'Playback begins at a specific second (0:45 into the video).',
+        'fd.closeend.title': 'Auto-close on End',
+        'fd.closeend.desc':  'The layer closes automatically when the video finishes. (starts at 3:20)',
+        'fd.ctrl.title':  'Control Customization',
+        'fd.ctrl.desc':   'Show only what you need, or enable the full control bar with speed control.',
+        'fd.ctrl.min':    'Minimal',
+        'fd.ctrl.full':   'Full',
+        'fd.poster.title': 'Custom Poster',
+        'fd.poster.desc':  'Use your own image as the poster instead of the YouTube thumbnail. Visible when paused.',
         'code.html':
 `<!-- Open trigger -->
 <button data-tube-open="my-video">Watch Video</button>
