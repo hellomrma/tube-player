@@ -20,7 +20,7 @@
 - **테스트**: Vitest
 - **언어**: Vanilla JavaScript (ES Modules)
 - **스타일**: CSS (CSS 변수 기반 테마, 반응형)
-- **문서**: GEMINI.md (엔지니어링 원칙), PLAN.md (로드맵)
+- **문서**: README.md (영문), README.ko.md (한국어), docs/guide.md (사용 가이드)
 
 ## 폴더 구조
 
@@ -35,7 +35,6 @@ tubeplayer/
 ├── demo/               # 데모 페이지 (Vercel 배포 소스)
 ├── docs/               # 가이드 문서
 ├── tests/              # 테스트 코드
-├── GEMINI.md           # 프로젝트 개발 원칙
 └── vite.config.js
 ```
 
