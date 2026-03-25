@@ -1,27 +1,29 @@
-# tubeplayer 사용 가이드
+# TubePlayer Usage Guide
 
-웹 프로젝트에 커스텀 YouTube 팝업 플레이어를 추가하는 방법을 단계별로 안내합니다.
+**English** | [한국어](./guide.ko.md)
+
+A step-by-step guide to adding a custom YouTube popup player to your web project.
 
 ---
 
-## 목차
+## Table of Contents
 
-1. [설치](#1-설치)
-2. [기본 사용법 (HTML 선언적 방식)](#2-기본-사용법)
-3. [JavaScript API 방식](#3-javascript-api-방식)
-4. [모바일 최적화](#4-모바일-최적화)
-5. [여러 영상 등록](#5-여러-영상-등록)
-6. [테마 설정](#6-테마-설정)
-7. [컨트롤 커스터마이징](#7-컨트롤-커스터마이징)
-8. [이벤트 활용](#8-이벤트-활용)
-9. [수동 인스턴스 제어](#9-수동-인스턴스-제어)
-10. [접근성과 키보드](#10-접근성과-키보드)
-11. [데모 페이지](#11-데모-페이지)
+1. [Installation](#1-installation)
+2. [Basic Usage (Declarative HTML)](#2-basic-usage)
+3. [JavaScript API](#3-javascript-api)
+4. [Mobile Optimization](#4-mobile-optimization)
+5. [Multiple Videos](#5-multiple-videos)
+6. [Theme Configuration](#6-theme-configuration)
+7. [Control Customization](#7-control-customization)
+8. [Events](#8-events)
+9. [Manual Instance Control](#9-manual-instance-control)
+10. [Accessibility & Keyboard](#10-accessibility--keyboard)
+11. [Demo Page](#11-demo-page)
 12. [FAQ](#12-faq)
 
 ---
 
-## 1. 설치
+## 1. Installation
 
 ### npm / yarn / pnpm
 
@@ -40,17 +42,17 @@ npm install tubeplayer
 
 ---
 
-## 2. 기본 사용법
+## 2. Basic Usage
 
-가장 간단한 방법은 HTML 데이터 속성만으로 선언하고, `TubePlayer.init()`을 호출하는 것입니다.
+The simplest approach is to declare everything with HTML data attributes and call `TubePlayer.init()`.
 
-### Step 1: HTML 작성
+### Step 1: HTML
 
 ```html
-<!-- 1) 트리거 버튼 — 클릭하면 레이어가 열립니다 -->
-<button data-tube-open="my-trailer">데모 열기</button>
+<!-- 1) Trigger button — opens the layer on click -->
+<button data-tube-open="my-trailer">Watch Video</button>
 
-<!-- 2) 레이어 + YouTube 플레이어 선언 -->
+<!-- 2) Layer + YouTube player declaration -->
 <div data-tube-layer="my-trailer"
      data-tube-close-on-dim="true"
      data-tube-animation="fade">
@@ -62,7 +64,7 @@ npm install tubeplayer
 </div>
 ```
 
-### Step 2: 초기화
+### Step 2: Initialize
 
 ```html
 <script type="module">
@@ -73,37 +75,37 @@ npm install tubeplayer
 
 ---
 
-## 3. JavaScript API 방식
+## 3. JavaScript API
 
 ```js
 import TubePlayer, { TubeLayer, TubeYouTube } from 'tubeplayer';
 
 TubePlayer.init();
 
-// 특정 레이어 열기
+// Open a specific layer
 const trailer = TubePlayer.get('my-trailer');
 trailer.open();
 ```
 
 ---
 
-## 4. 모바일 최적화
+## 4. Mobile Optimization
 
-`tubeplayer`는 모바일 웹 환경에서도 완벽하게 동작하도록 설계되었습니다.
+`tubeplayer` is designed to work perfectly in mobile web environments.
 
-- **반응형 전체화면**: 모바일 브라우저의 전체화면 모드(`:fullscreen`)에서 영상이 화면 가득 차도록 자동 조정됩니다.
-- **터치 이벤트**: 재생 바, 컨트롤 버튼 등 모든 UI 요소가 터치 조작에 최적화되어 있습니다.
-- **레이아웃**: 데모 페이지와 같이 `clamp()` 등의 최신 CSS 기능을 활용하여 유동적인 레이아웃을 제공합니다.
+- **Responsive fullscreen**: Automatically fills the screen in mobile fullscreen mode (`:fullscreen`).
+- **Touch events**: All UI elements including controls are optimized for touch interaction.
+- **Layout**: Uses modern CSS features like `clamp()` for fluid, adaptive layouts.
 
 ---
 
-## 5. 여러 영상 등록
+## 5. Multiple Videos
 
-하나의 페이지에 여러 개의 레이어와 영상을 등록할 수 있습니다.
+You can register multiple layers and videos on a single page.
 
 ```html
-<button data-tube-open="trailer-1">트레일러 1</button>
-<button data-tube-open="trailer-2">트레일러 2</button>
+<button data-tube-open="trailer-1">Trailer 1</button>
+<button data-tube-open="trailer-2">Trailer 2</button>
 
 <div data-tube-layer="trailer-1" data-tube-animation="fade">
   <div data-tube-youtube="VIDEO_ID_1" data-tube-theme="dark"></div>
@@ -116,9 +118,9 @@ trailer.open();
 
 ---
 
-## 6. 테마 설정
+## 6. Theme Configuration
 
-CSS 변수를 오버라이드하여 브랜드 컬러를 적용할 수 있습니다.
+Override CSS variables to apply your brand colors.
 
 ```js
 TubePlayer.init({
@@ -131,33 +133,33 @@ TubePlayer.init({
 
 ---
 
-## 7. 컨트롤 커스터마이징
+## 7. Control Customization
 
-`data-tube-controls` 속성에 표시할 컨트롤을 쉼표로 나열합니다.
+List the controls to display in the `data-tube-controls` attribute, comma-separated.
 
-| 키 | 위치 | 설명 |
+| Key | Position | Description |
 |---|---|---|
-| `mute` | 우측 | 음소거 토글 |
-| `fullscreen` | 우측 | 전체화면 |
+| `mute` | right | Toggle mute |
+| `fullscreen` | right | Toggle fullscreen |
 
 ---
 
-## 8. 이벤트 활용
+## 8. Events
 
 ```js
 const instance = TubePlayer.get('my-trailer');
 
-instance.on('layer:open',  () => console.log('레이어 열림'));
-instance.on('layer:close', () => console.log('레이어 닫힘'));
-instance.on('video:play',  () => console.log('재생 시작'));
-instance.on('video:pause', () => console.log('일시정지'));
-instance.on('video:end',   () => console.log('재생 종료'));
-instance.on('video:ready', () => console.log('플레이어 준비'));
+instance.on('layer:open',  () => console.log('layer opened'));
+instance.on('layer:close', () => console.log('layer closed'));
+instance.on('video:play',  () => console.log('playback started'));
+instance.on('video:pause', () => console.log('playback paused'));
+instance.on('video:end',   () => console.log('playback ended'));
+instance.on('video:ready', () => console.log('player ready'));
 ```
 
 ---
 
-## 9. 수동 인스턴스 제어
+## 9. Manual Instance Control
 
 ```js
 const player = TubePlayer.getPlayer('trailer');
@@ -165,34 +167,35 @@ const player = TubePlayer.getPlayer('trailer');
 player.play();
 player.pause();
 player.mute();
-player.seek(30); // 30초로 이동
+player.seek(30); // seek to 30 seconds
 ```
 
 ---
 
-## 10. 접근성과 키보드
+## 10. Accessibility & Keyboard
 
-레이어가 열려있을 때 다음 키보드 단축키를 사용할 수 있습니다. (모바일 터치 환경에서는 자동으로 비활성화 안내 처리 가능)
+The following keyboard shortcuts are available while a layer is open.
+On mobile touch devices, shortcut hints are hidden automatically.
 
-| 키 | 동작 |
+| Key | Action |
 |---|---|
-| `Space` | 재생 / 일시정지 |
-| `Esc` | 레이어 닫기 |
-| `M` | 음소거 토글 |
-| `F` | 전체화면 토글 |
-| `←` / `→` | 5초 앞/뒤 이동 |
+| `Space` | Play / Pause |
+| `Esc` | Close layer |
+| `M` | Toggle mute |
+| `F` | Toggle fullscreen |
+| `←` / `→` | Seek ±5 seconds |
 
 ---
 
-## 11. 데모 페이지
+## 11. Demo Page
 
-데모 페이지(`demo/index.html`)는 라이브러리의 사용 방법을 직접 확인할 수 있는 인터랙티브 가이드입니다.
+The demo page (`demo/index.html`) is an interactive guide to explore the library.
 
-- **히어로 섹션**: 실제 팝업 플레이어 동작 확인 ("데모 열기" 버튼)
-- **Get Started 섹션**: 설치 → HTML → 초기화 → 이벤트 4단계 가이드, 속성 레퍼런스 테이블, 코드 복사 버튼
-- **다국어 지원**: 브라우저 언어 설정이 한국어(`ko`)이면 한국어, 그 외에는 영어로 자동 전환됩니다.
+- **Hero section**: Try the live popup player ("Open Demo" button)
+- **Get Started section**: 4-step guide (install → HTML → init → events), attribute reference tables, copy buttons
+- **Multilingual**: Auto-switches to Korean or English based on browser language. A manual KO/EN toggle is available in the top-right corner.
 
-로컬에서 실행하려면:
+To run locally:
 
 ```bash
 npm run dev
@@ -202,10 +205,10 @@ npm run dev
 
 ## 12. FAQ
 
-### Q: Vercel에 배포하려면 어떻게 하나요?
+### Q: How do I deploy to Vercel?
 
-프로젝트 루트에서 `npm run build`를 실행하면 `demo/` 폴더의 내용이 빌드되어 `dist/`에 저장됩니다. Vercel에서 기본 빌드 명령어로 설정되어 있어 바로 배포 가능합니다.
+Run `npm run build` from the project root. The `demo/` folder will be built and output to `dist/`. The default build command is already configured for Vercel.
 
-### Q: 레이어를 다시 열면 영상이 처음부터 나옵니다.
+### Q: The video restarts from the beginning when I reopen the layer.
 
-네, `tubeplayer`는 트레일러/홍보 영상 시청 경험을 위해 레이어 재오픈 시 영상을 항상 0초부터 다시 재생합니다.
+Yes, this is by design. `tubeplayer` always restarts playback from 0 seconds on reopen, optimized for trailer and promotional video experiences.
