@@ -108,7 +108,7 @@ tube-player/
 
 ### Phase 3 — 안정화
 
-- [ ] npm 패키지 배포
+- [x] **npm 패키지 배포** (`tubeplayer@0.1.0` — 2026-03-25)
 - [ ] 단위 테스트 커버리지 확대 (Vitest)
 - [ ] API 문서 자동화
 

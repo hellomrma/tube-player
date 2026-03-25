@@ -26,7 +26,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint src/",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "prepublishOnly": "npm test && npm run build:lib"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
@@ -36,6 +37,14 @@
     "vitest": "^1.0.0"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hellomrma/tube-player.git"
+  },
+  "homepage": "https://github.com/hellomrma/tube-player#readme",
+  "bugs": {
+    "url": "https://github.com/hellomrma/tube-player/issues"
+  },
   "keywords": [
     "youtube",
     "player",

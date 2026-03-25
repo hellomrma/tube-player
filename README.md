@@ -2,6 +2,10 @@
 
 **English** | [한국어](./README.ko.md)
 
+[![npm version](https://img.shields.io/npm/v/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
+[![npm downloads](https://img.shields.io/npm/dm/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
+[![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
+
 A custom YouTube popup player library built with Vanilla JS.
 
 Completely hides the default YouTube UI and replaces it with custom controls and a popup layer system.

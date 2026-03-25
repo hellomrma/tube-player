@@ -2,6 +2,10 @@
 
 [English](./README.md) | **한국어**
 
+[![npm version](https://img.shields.io/npm/v/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
+[![npm downloads](https://img.shields.io/npm/dm/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
+[![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
+
 커스텀 YouTube 팝업 플레이어 라이브러리.
 
 YouTube 기본 UI를 완전히 숨기고, 커스텀 컨트롤과 팝업 레이어를 제공합니다.

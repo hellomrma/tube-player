@@ -1,0 +1,19 @@
+# Source & dev files
+src/
+demo/
+docs/
+tests/
+*.config.js
+*.config.ts
+
+# CI / tooling
+.github/
+.claude/
+.eslintrc*
+.prettierrc*
+
+# Docs (not needed in package)
+CLAUDE.md
+GEMINI.md
+PLAN.md
+README.ko.md
