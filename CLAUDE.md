@@ -14,6 +14,7 @@ Designed by referencing the layer + YouTube structure of `cinder-city.com`.
 - **Built-in Get Started docs section in demo page** (install, HTML, init, events — 4 steps)
 - **Demo page i18n**: auto-switches Korean/English via `navigator.language`, with manual toggle persisted to `localStorage`
 - **Published to npm** as `tubeplayer@0.1.0`
+- **v0.2 features**: swipe-to-close (mobile), volume/mute persistence (localStorage), loop, startTime, custom poster, closeOnEnd, speed control
 
 ## Tech Stack
 

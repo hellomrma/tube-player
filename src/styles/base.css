@@ -313,6 +313,17 @@ a.tube-control:focus-visible {
   outline-offset: 2px;
 }
 
+/* Speed Control */
+.tube-control--speed {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  min-width: 28px;
+  text-align: center;
+}
+
 /* Time Display */
 .tube-control--time {
   font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;

@@ -62,6 +62,10 @@ class TubeManager {
           : globalOptions.restartOnOpen !== undefined
             ? globalOptions.restartOnOpen
             : true;
+        const loop = ytEl.getAttribute('data-tube-loop') === 'true';
+        const startTime = parseInt(ytEl.getAttribute('data-tube-start') || '0', 10) || 0;
+        const poster = ytEl.getAttribute('data-tube-poster') || null;
+        const closeOnEnd = ytEl.getAttribute('data-tube-close-on-end') === 'true';
 
         const player = new TubeYouTube(videoId, {
           autoplay: globalOptions.autoplay !== undefined ? globalOptions.autoplay : autoplay,
@@ -69,8 +73,15 @@ class TubeManager {
           theme: typeof theme === 'string' ? theme : 'dark',
           controls,
           restartOnOpen,
+          loop,
+          startTime,
+          poster,
         });
         this._players.set(id, player);
+
+        if (closeOnEnd) {
+          player.on('video:end', () => layer.close());
+        }
 
         let shortcutsBound = false;
 
@@ -79,7 +90,7 @@ class TubeManager {
           if (!player._mounted) {
             await player.mount(layer.contentsEl);
           } else if (player.options.restartOnOpen !== false) {
-            player.seek(0).play();
+            player.seek(player.options.startTime || 0).play();
           }
           if (!shortcutsBound) {
             shortcutsBound = true;

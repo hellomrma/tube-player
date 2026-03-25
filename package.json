@@ -1,7 +1,7 @@
 {
   "name": "tubeplayer",
   "version": "0.1.0",
-  "description": "Vanilla JS custom YouTube popup player with fully custom controls and mobile optimization",
+  "description": "TubePlayer — YouTube Popup Player. Custom YouTube popup player library with fully custom controls, mobile optimization, and no YouTube UI.",
   "type": "module",
   "main": "dist/tubeplayer.cjs.js",
   "module": "dist/tubeplayer.es.js",
@@ -47,11 +47,23 @@
   },
   "keywords": [
     "youtube",
-    "player",
+    "youtube-player",
+    "youtube-popup",
+    "youtube-popup-player",
+    "youtube-modal",
+    "youtube-embed",
+    "youtube-iframe",
+    "video-player",
+    "popup-player",
+    "video-popup",
+    "custom-video-player",
+    "custom-controls",
     "popup",
     "modal",
     "video",
-    "custom-controls",
-    "tubeplayer"
+    "player",
+    "tubeplayer",
+    "vanilla-js",
+    "mobile-video"
   ]
 }

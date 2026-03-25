@@ -1,23 +1,31 @@
-# TubePlayer
+# TubePlayer — YouTube Popup Player
 
 [English](./README.md) | **한국어**
 
 [![npm version](https://img.shields.io/npm/v/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
 [![npm downloads](https://img.shields.io/npm/dm/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
 [![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
+[![demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tubeplayer.playgrounder.dev/)
 
 커스텀 YouTube 팝업 플레이어 라이브러리.
 
 YouTube 기본 UI를 완전히 숨기고, 커스텀 컨트롤과 팝업 레이어를 제공합니다.
 프레임워크 비종속 Vanilla JS 코어 기반으로 설계되었습니다.
 
+**[라이브 데모 →](https://tubeplayer.playgrounder.dev/)**
+
 ## 특징
 
 - **YouTube UI 완전 차단:** 포스터 + 오버레이 기법을 통해 YouTube의 로고 및 컨트롤을 완벽히 숨김.
-- **모바일 최적화:** `clamp()` 기반 유동 타이포그래피 및 반응형 로고 적용으로 모든 기기에서 최적의 UI 제공.
+- **모바일 최적화:** `clamp()` 기반 유동 타이포그래피, 반응형 레이아웃, 아래로 스와이프하여 닫기 제스처 지원.
 - **팝업 시스템:** 딤(Dim), 포커스 트랩, ESC 키/딤 클릭 시 닫기, 3가지 애니메이션(Fade, Slide, Zoom).
 - **고도화된 전체화면:** 모바일 브라우저에서도 영상이 화면에 꽉 차도록 최적화된 전체화면 모드 지원.
-- **레이어 재오픈 로직:** 레이어를 닫았다가 다시 열 때 영상이 항상 처음(0초)부터 재생되도록 자동 제어.
+- **레이어 재오픈 로직:** 레이어를 다시 열 때 영상이 항상 처음(`data-tube-start` 기준)부터 재생되도록 자동 제어.
+- **반복 재생 & 시작 시간:** `data-tube-loop`로 반복 재생, `data-tube-start`로 특정 초부터 시작.
+- **영상 종료 시 자동 닫기:** `data-tube-close-on-end`로 영상이 끝나면 레이어 자동 닫기.
+- **커스텀 포스터:** `data-tube-poster`로 YouTube 썸네일 대신 원하는 이미지 지정.
+- **볼륨 상태 유지:** 음소거 및 볼륨 수준을 `localStorage`에 저장하여 다음 방문 시 자동 복원.
+- **재생 속도 컨트롤:** `data-tube-controls`에 `speed` 추가로 0.5× – 2× 속도 조절 지원.
 - **커스터마이징:** CSS 변수 기반 테마 시스템 및 데이터 속성을 이용한 선언적 초기화.
 - **번들 지원:** ESM / CJS / UMD 포맷 제공으로 다양한 환경에서 사용 가능.
 - **다국어 데모 페이지:** 브라우저 언어 설정에 따라 한국어/영어 자동 전환되는 Get Started 가이드 내장.
@@ -102,7 +110,11 @@ instance.on('video:end',  () => console.log('재생 종료'));
 | `data-tube-autoplay` | 자동 재생 여부 | `true` |
 | `data-tube-muted` | 음소거 시작 여부 | `false` |
 | `data-tube-theme` | 테마 색상 (`dark`) | `dark` |
-| `data-tube-controls` | 노출할 컨트롤 (쉼표 구분: `mute,fullscreen`) | `mute,fullscreen` |
+| `data-tube-controls` | 노출할 컨트롤 (쉼표 구분: `mute,fullscreen,speed`) | `mute,fullscreen` |
+| `data-tube-start` | 재생 시작 시간 (초) | `0` |
+| `data-tube-loop` | 반복 재생 여부 | `false` |
+| `data-tube-poster` | 커스텀 포스터 이미지 URL | YouTube 썸네일 |
+| `data-tube-close-on-end` | 영상 종료 시 레이어 자동 닫기 | `false` |
 
 ## 키보드 단축키 (데스크톱)
 

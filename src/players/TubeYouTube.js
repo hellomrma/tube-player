@@ -78,6 +78,9 @@ export class TubeYouTube extends EventEmitter {
       theme: 'dark',
       controls: ['mute', 'fullscreen'],
       restartOnOpen: true,
+      loop: false,
+      startTime: 0,
+      poster: null,
       ...options,
     };
     this.state = YT_STATES.UNSTARTED;
@@ -187,8 +190,21 @@ export class TubeYouTube extends EventEmitter {
             this._playerEl = container.querySelector('iframe');
             this.state = YT_STATES.READY;
 
-            if (this.options.muted) {
+            // 저장된 볼륨/음소거 상태 복원, 없으면 options 기본값 사용
+            const savedMuted = localStorage.getItem('tube-muted');
+            const savedVolume = localStorage.getItem('tube-volume');
+            const shouldMute = savedMuted !== null ? savedMuted === 'true' : this.options.muted;
+            if (shouldMute) {
               this._ytPlayer.mute();
+            } else {
+              this._ytPlayer.unMute();
+              if (savedVolume !== null) {
+                this._ytPlayer.setVolume(parseInt(savedVolume, 10));
+              }
+            }
+
+            if (this.options.startTime > 0) {
+              this._ytPlayer.seekTo(this.options.startTime, true);
             }
 
             this.emit('video:ready', this);
@@ -228,8 +244,11 @@ export class TubeYouTube extends EventEmitter {
                 this._centerBtn.setAttribute('aria-label', '재생');
                 this._centerBtn.setAttribute('aria-pressed', 'false');
               }
-              this.emit('video:ended');
+              this.emit('video:end');
               this._stopProgressTracking();
+              if (this.options.loop) {
+                this.seek(this.options.startTime || 0).play();
+              }
             } else if (newState === YT_STATES.BUFFERING) {
               this.emit('video:buffering');
             }
@@ -252,6 +271,11 @@ export class TubeYouTube extends EventEmitter {
   }
 
   _setPosterImage() {
+    if (this.options.poster) {
+      this._posterEl.style.background = `url("${this.options.poster}") 50% 50% / cover no-repeat #000`;
+      return;
+    }
+
     const qualities = ['maxresdefault', 'sddefault', 'hqdefault'];
     let idx = 0;
 
@@ -288,6 +312,7 @@ export class TubeYouTube extends EventEmitter {
       fullscreen: () => import('../controls/Fullscreen.js').then((m) => m.Fullscreen),
       'youtube-link': () => import('../controls/YouTubeLink.js').then((m) => m.YouTubeLink),
       volume: () => import('../controls/Volume.js').then((m) => m.Volume),
+      speed: () => import('../controls/Speed.js').then((m) => m.Speed),
     };
 
     // 좌측 그룹과 우측 그룹 분리
@@ -367,12 +392,14 @@ export class TubeYouTube extends EventEmitter {
 
   mute() {
     if (this._ytPlayer) this._ytPlayer.mute();
+    localStorage.setItem('tube-muted', 'true');
     this.emit('video:mute', true);
     return this;
   }
 
   unmute() {
     if (this._ytPlayer) this._ytPlayer.unMute();
+    localStorage.setItem('tube-muted', 'false');
     this.emit('video:mute', false);
     return this;
   }
@@ -383,6 +410,7 @@ export class TubeYouTube extends EventEmitter {
 
   setVolume(value) {
     if (this._ytPlayer) this._ytPlayer.setVolume(value);
+    localStorage.setItem('tube-volume', Math.round(value));
     return this;
   }
 

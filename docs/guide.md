@@ -1,4 +1,4 @@
-# TubePlayer Usage Guide
+# TubePlayer — YouTube Popup Player: Usage Guide
 
 **English** | [한국어](./guide.ko.md)
 
@@ -139,8 +139,14 @@ List the controls to display in the `data-tube-controls` attribute, comma-separa
 
 | Key | Position | Description |
 |---|---|---|
+| `play` | left | Play / Pause toggle |
+| `progress` | top | Seek bar |
+| `time` | left | Elapsed / duration |
+| `speed` | left | Cycle playback speed (0.5× → 2×) |
 | `mute` | right | Toggle mute |
+| `volume` | right | Volume slider |
 | `fullscreen` | right | Toggle fullscreen |
+| `youtube-link` | right | Open on YouTube |
 
 ---
 
@@ -203,9 +209,25 @@ npm run dev
 
 ---
 
-## 12. FAQ
+## 12. New Attributes (v0.2+)
+
+| Attribute | Description | Default |
+|---|---|---|
+| `data-tube-start` | Start time in seconds | `0` |
+| `data-tube-loop` | Loop video | `false` |
+| `data-tube-poster` | Custom poster image URL | YouTube thumbnail |
+| `data-tube-close-on-end` | Auto-close layer when video ends | `false` |
+
+Volume and mute state are automatically persisted to `localStorage` (`tube-volume`, `tube-muted`).
+
+Layers can be closed on mobile by swiping down.
+
+---
+
+## 13. FAQ
 
 ### Q: How do I deploy to Vercel?
+
 
 Run `npm run build` from the project root. The `demo/` folder will be built and output to `dist/`. The default build command is already configured for Vercel.
 

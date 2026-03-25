@@ -85,6 +85,29 @@ export class TubeLayer extends EventEmitter {
     this.el = layer;
     this._contentsEl = layer.querySelector('.tube-layer__contents');
     this._bindDomEvents();
+    this._bindSwipeToClose();
+  }
+
+  _bindSwipeToClose() {
+    const wrap = this.el.querySelector('.tube-layer__contents-wrap');
+    if (!wrap) return;
+
+    let startY = 0;
+    let startX = 0;
+
+    wrap.addEventListener('touchstart', (e) => {
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    wrap.addEventListener('touchend', (e) => {
+      const deltaY = e.changedTouches[0].clientY - startY;
+      const deltaX = Math.abs(e.changedTouches[0].clientX - startX);
+      // 80px 이상 아래로 스와이프하고, 수평보다 수직 이동이 클 때 닫기
+      if (deltaY > 80 && deltaX < deltaY) {
+        this.close();
+      }
+    }, { passive: true });
   }
 
   _bindDomEvents() {

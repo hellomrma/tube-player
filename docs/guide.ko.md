@@ -1,4 +1,4 @@
-# TubePlayer 사용 가이드
+# TubePlayer — YouTube Popup Player: 사용 가이드
 
 [English](./guide.md) | **한국어**
 
@@ -139,8 +139,14 @@ TubePlayer.init({
 
 | 키 | 위치 | 설명 |
 |---|---|---|
+| `play` | 좌측 | 재생 / 일시정지 토글 |
+| `progress` | 상단 | 시크 바 |
+| `time` | 좌측 | 경과 시간 / 전체 시간 |
+| `speed` | 좌측 | 재생 속도 순환 (0.5× → 2×) |
 | `mute` | 우측 | 음소거 토글 |
+| `volume` | 우측 | 볼륨 슬라이더 |
 | `fullscreen` | 우측 | 전체화면 |
+| `youtube-link` | 우측 | YouTube에서 열기 |
 
 ---
 
@@ -203,7 +209,22 @@ npm run dev
 
 ---
 
-## 12. FAQ
+## 12. 신규 속성 (v0.2+)
+
+| 속성 | 설명 | 기본값 |
+|---|---|---|
+| `data-tube-start` | 재생 시작 시간 (초) | `0` |
+| `data-tube-loop` | 반복 재생 여부 | `false` |
+| `data-tube-poster` | 커스텀 포스터 이미지 URL | YouTube 썸네일 |
+| `data-tube-close-on-end` | 영상 종료 시 레이어 자동 닫기 | `false` |
+
+볼륨 및 음소거 상태는 `localStorage`(`tube-volume`, `tube-muted`)에 자동 저장됩니다.
+
+모바일에서 아래로 스와이프하면 레이어를 닫을 수 있습니다.
+
+---
+
+## 13. FAQ
 
 ### Q: Vercel에 배포하려면 어떻게 하나요?
 
