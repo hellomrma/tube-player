@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TubePlayer — Demo</title>
+  <title>TubePlayer — YouTube Popup Player</title>
   <link rel="icon" type="image/png" href="./tubeplayer-logo.png" />
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
@@ -689,7 +689,7 @@
       <img src="./tubeplayer-logo.png" alt="TubePlayer Logo" />
     </div>
 
-    <h1><span>TubePlayer</span> Demo</h1>
+    <h1><span>TubePlayer</span></h1>
     <p class="desc" data-i18n-html="hero.desc"></p>
 
     <div class="hero-buttons">
@@ -1093,9 +1093,9 @@ TubePlayer.init();</code></pre>
     // ─── i18n ─────────────────────────────────────────────
     const TRANSLATIONS = {
       ko: {
-        'hero.desc':   '프레임워크에 구애받지 않는 Vanilla JS 기반의<br />커스텀 YouTube 팝업 플레이어 라이브러리입니다.',
-        'hero.open':   '데모 열기',
-        'scroll.hint': '기능 보기',
+        'hero.desc':   'YouTube UI를 완전히 숨기고<br />원하는 방식으로 커스텀 팝업 플레이어를 구현하세요.',
+        'hero.open':   '플레이어 열기',
+        'scroll.hint': '기능 살펴보기',
         'gs.desc':     '몇 줄의 코드로 YouTube 팝업 플레이어를 완성하세요.',
         's1.title':    '설치',
         's1.desc':     'npm 또는 CDN으로 TubePlayer를 프로젝트에 추가합니다.',
@@ -1127,9 +1127,9 @@ TubePlayer.init();</code></pre>
         'kb.f':        '전체화면 토글',
         'copy':        '복사',
         'copied':      '복사됨!',
-        'fd.title':       '기능 데모',
-        'fd.desc':        'TubePlayer의 주요 기능을 직접 체험해보세요.',
-        'fd.open':        '데모 열기',
+        'fd.title':       '주요 기능',
+        'fd.desc':        'TubePlayer가 제공하는 기능을 직접 확인해보세요.',
+        'fd.open':        '직접 체험',
         'fd.anim.title':  '팝업 애니메이션',
         'fd.anim.desc':   '레이어를 열고 닫을 때 3가지 애니메이션 중 하나를 선택할 수 있습니다.',
         'fd.loop.title':  '반복 재생',
@@ -1174,8 +1174,8 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
       },
 
       en: {
-        'hero.desc':   'A framework-agnostic Vanilla JS library for<br />custom YouTube popup players.',
-        'hero.open':   'Open Demo',
+        'hero.desc':   'Hide the YouTube UI completely.<br />Deliver a fully branded popup video experience.',
+        'hero.open':   'Try it Live',
         'scroll.hint': 'Explore Features',
         'gs.desc':     'Set up a YouTube popup player in just a few lines of code.',
         's1.title':    'Install',
@@ -1208,9 +1208,9 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'kb.f':        'Toggle fullscreen',
         'copy':        'Copy',
         'copied':      'Copied!',
-        'fd.title':       'Feature Demos',
-        'fd.desc':        'Try each feature of TubePlayer live.',
-        'fd.open':        'Open Demo',
+        'fd.title':       'Features',
+        'fd.desc':        'See what TubePlayer can do — hands on.',
+        'fd.open':        'Try it',
         'fd.anim.title':  'Popup Animations',
         'fd.anim.desc':   'Choose from 3 animation types when opening and closing the layer.',
         'fd.loop.title':  'Loop Playback',
