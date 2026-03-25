@@ -16,7 +16,8 @@
 8. [이벤트 활용](#8-이벤트-활용)
 9. [수동 인스턴스 제어](#9-수동-인스턴스-제어)
 10. [접근성과 키보드](#10-접근성과-키보드)
-11. [FAQ](#11-faq)
+11. [데모 페이지](#11-데모-페이지)
+12. [FAQ](#12-faq)
 
 ---
 
@@ -32,9 +33,9 @@ npm install tubeplayer
 
 ```html
 <!-- CSS -->
-<link rel="stylesheet" href="https://unpkg.com/tubeplayer/dist/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tubeplayer/dist/style.css">
 <!-- JS (UMD) -->
-<script src="https://unpkg.com/tubeplayer/dist/tubeplayer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tubeplayer/dist/tubeplayer.umd.js"></script>
 ```
 
 ---
@@ -146,9 +147,12 @@ TubePlayer.init({
 ```js
 const instance = TubePlayer.get('my-trailer');
 
-instance.on('layer:open', () => console.log('레이어 열림'));
-instance.on('video:play', () => console.log('재생 시작'));
-instance.on('video:ended', () => console.log('재생 종료'));
+instance.on('layer:open',  () => console.log('레이어 열림'));
+instance.on('layer:close', () => console.log('레이어 닫힘'));
+instance.on('video:play',  () => console.log('재생 시작'));
+instance.on('video:pause', () => console.log('일시정지'));
+instance.on('video:end',   () => console.log('재생 종료'));
+instance.on('video:ready', () => console.log('플레이어 준비'));
 ```
 
 ---
@@ -180,7 +184,23 @@ player.seek(30); // 30초로 이동
 
 ---
 
-## 11. FAQ
+## 11. 데모 페이지
+
+데모 페이지(`demo/index.html`)는 라이브러리의 사용 방법을 직접 확인할 수 있는 인터랙티브 가이드입니다.
+
+- **히어로 섹션**: 실제 팝업 플레이어 동작 확인 ("데모 열기" 버튼)
+- **Get Started 섹션**: 설치 → HTML → 초기화 → 이벤트 4단계 가이드, 속성 레퍼런스 테이블, 코드 복사 버튼
+- **다국어 지원**: 브라우저 언어 설정이 한국어(`ko`)이면 한국어, 그 외에는 영어로 자동 전환됩니다.
+
+로컬에서 실행하려면:
+
+```bash
+npm run dev
+```
+
+---
+
+## 12. FAQ
 
 ### Q: Vercel에 배포하려면 어떻게 하나요?
 

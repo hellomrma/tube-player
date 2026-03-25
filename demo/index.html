@@ -5,24 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TubePlayer — Demo</title>
   <link rel="icon" type="image/png" href="./tubeplayer-logo.png" />
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --accent: #ff4d4d;
+      --accent-dim: rgba(255, 77, 77, 0.15);
+      --surface: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --text-muted: #777;
+      --text-secondary: #aaa;
+    }
+
     body {
-      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
       background: #0a0a0a;
       color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 32px;
       overflow-x: hidden;
     }
 
-    /* Background decoration */
+    /* ─── Hero ─────────────────────────────────────────── */
+
     body::before {
       content: '';
       position: fixed;
@@ -35,18 +41,17 @@
       z-index: -1;
     }
 
-    .container {
+    .hero {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      padding: 60px 20px 80px;
       text-align: center;
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
     }
 
     .logo-wrap {
-      margin-top: -40px;
       margin-bottom: 40px;
       animation: fadeInDown 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -82,13 +87,12 @@
       animation: fadeIn 1s ease-out 0.4s both;
     }
 
-    .demo-buttons {
+    .hero-buttons {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
       justify-content: center;
       animation: fadeInUp 0.8s ease-out 0.6s both;
-      padding: 0 20px;
     }
 
     .btn {
@@ -96,13 +100,13 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 16px 32px;
+      padding: 14px 28px;
       min-width: 140px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
       border-radius: 50px;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--surface);
       color: #fff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
       text-decoration: none;
@@ -110,89 +114,402 @@
       backdrop-filter: blur(10px);
     }
 
-    @media (hover: none) and (pointer: coarse) {
-      .shortcuts {
-        display: none;
-      }
-      .logo-wrap {
-        margin-top: 0;
-      }
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--accent);
+      flex-shrink: 0;
     }
 
-    .btn--github svg {
-      fill: #fff !important;
-    }
-
-    .btn--github:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
+    .btn--github svg { fill: #fff; }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 77, 77, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 77, 77, 0.4);
       transform: translateY(-2px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
 
-    .btn:active {
-      transform: translateY(0);
+    .btn:active { transform: translateY(0); }
+    .btn--github:hover { border-color: rgba(255, 255, 255, 0.3); }
+
+    .scroll-hint {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeIn 1s ease-out 1s both;
+      cursor: pointer;
     }
 
-    .btn svg {
+    .scroll-hint svg {
       width: 20px;
       height: 20px;
-      fill: #ff4d4d;
+      fill: none;
+      stroke: var(--text-muted);
+      stroke-width: 1.5;
+      animation: bounce 2s ease-in-out infinite;
     }
 
-    .shortcuts {
-      margin-top: 60px;
-      padding: 24px 32px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 14px;
-      color: #777;
-      animation: fadeIn 1s ease-out 0.8s both;
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
     }
 
-    .shortcuts h3 {
-      color: #aaa;
+    /* ─── Divider ───────────────────────────────────────── */
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* ─── Get Started ───────────────────────────────────── */
+
+    .get-started {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+    }
+
+    .gs-header {
+      margin-bottom: 64px;
+    }
+
+    .gs-label {
+      display: inline-block;
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 16px;
       font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
     }
 
-    .shortcuts ul {
-      list-style: none;
+    .gs-header h2 {
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .gs-header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Steps */
+
+    .gs-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .gs-step {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      text-align: left;
+      grid-template-columns: 56px 1fr;
+      gap: 0 24px;
     }
 
-    .shortcuts li {
+    .gs-step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid rgba(255, 77, 77, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .gs-step-body h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .gs-step-body > p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    /* Inline code in descriptions */
+
+    .ic {
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+      font-size: 13px;
+      color: #e5b567;
+      background: rgba(229, 181, 103, 0.1);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* Tabs */
+
+    .code-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: -1px;
+      font-family: inherit;
+    }
+
+    .code-tab:hover { color: #ccc; }
+
+    .code-tab.active {
+      color: #fff;
+      border-bottom-color: var(--accent);
+    }
+
+    /* Code block */
+
+    .code-wrap {
+      position: relative;
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-top: none;
+    }
+
+    .code-wrap--solo {
+      border-radius: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .code-wrap pre {
+      margin: 0;
+      padding: 20px 24px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      overflow-x: auto;
+      background: #111 !important;
+    }
+
+    .code-wrap pre code.hljs {
+      background: transparent;
+      padding: 0;
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+    }
+
+    .code-panel { display: none; }
+    .code-panel.active { display: block; }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+
+    .copy-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .copy-btn.copied {
+      color: #4ade80;
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+
+    /* Attr table */
+
+    .attr-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    .attr-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .attr-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .attr-table tr:last-child td { border-bottom: none; }
+
+    .attr-table code {
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+      font-size: 12.5px;
+      color: #e5b567;
+      background: rgba(229, 181, 103, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .attr-table .type {
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+      font-size: 12px;
+      color: #79b8ff;
+      white-space: nowrap;
+    }
+
+    .attr-table .desc { color: var(--text-secondary); }
+
+    .attr-table .default {
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .attr-section { margin-top: 20px; }
+
+    .attr-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* Events list */
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .event-item {
       display: flex;
       align-items: center;
       gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
     }
 
-    .shortcuts kbd {
+    .event-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .event-name {
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+      font-size: 12.5px;
+      color: #e5b567;
+    }
+
+    /* Keyboard shortcuts */
+
+    .shortcuts-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .shortcut-item kbd {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 24px;
-      height: 24px;
-      padding: 0 6px;
-      border-radius: 4px;
+      min-width: 26px;
+      height: 26px;
+      padding: 0 7px;
+      border-radius: 5px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      font-family: 'SF Mono', 'Consolas', monospace;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
       font-size: 11px;
-      color: #ccc;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.5);
+      color: #ddd;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
     }
+
+    /* Footer */
+
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .site-footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .site-footer a:hover { color: #fff; }
+
+    /* Animations */
 
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -209,30 +526,84 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 480px) {
-      .shortcuts ul {
-        grid-template-columns: 1fr;
-      }
+    /* Responsive */
+
+    @media (max-width: 600px) {
+      .gs-step { grid-template-columns: 1fr; }
+      .gs-step-num { margin-bottom: 12px; }
+      .shortcuts-row,
+      .events-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 400px) {
+      .shortcuts-row,
+      .events-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .scroll-hint { display: none; }
+    }
+
+    /* ─── Language toggle ───────────────────────────────── */
+
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 2px;
+      padding: 3px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      backdrop-filter: blur(12px);
+    }
+
+    .lang-btn {
+      padding: 5px 13px;
+      border-radius: 50px;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+
+    .lang-btn:hover { color: #ccc; }
+
+    .lang-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <!-- ─── Language toggle ─────────────────────────────────── -->
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn" data-lang="ko">KO</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <!-- ─── Hero ──────────────────────────────────────────── -->
+  <section class="hero">
     <div class="logo-wrap">
       <img src="./tubeplayer-logo.png" alt="TubePlayer Logo" />
     </div>
 
     <h1><span>TubePlayer</span> Demo</h1>
-    <p class="desc">
-      프레임워크에 구애받지 않는 Vanilla JS 기반의<br />
-      커스텀 YouTube 팝업 플레이어 라이브러리입니다.
-    </p>
+    <p class="desc" data-i18n-html="hero.desc"></p>
 
-    <div class="demo-buttons">
+    <div class="hero-buttons">
       <button class="btn" data-tube-open="trailer">
         <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-        데모 열기
+        <span data-i18n="hero.open"></span>
       </button>
       <a href="https://github.com/hellomrma/tube-player" target="_blank" class="btn btn--github">
         <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -240,18 +611,226 @@
       </a>
     </div>
 
-    <div class="shortcuts">
-      <h3>Keyboard Shortcuts</h3>
-      <ul>
-        <li><kbd>Space</kbd> 재생 / 일시정지</li>
-        <li><kbd>Esc</kbd> 레이어 닫기</li>
-        <li><kbd>M</kbd> 음소거 토글</li>
-        <li><kbd>F</kbd> 전체화면 토글</li>
-      </ul>
+    <div class="scroll-hint" onclick="document.getElementById('get-started').scrollIntoView({behavior:'smooth'})">
+      Get Started
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-  </div>
+  </section>
 
-  <!-- Layer & Player -->
+  <div class="section-divider"></div>
+
+  <!-- ─── Get Started ───────────────────────────────────── -->
+  <section class="get-started" id="get-started">
+    <div class="gs-header">
+      <span class="gs-label">Documentation</span>
+      <h2>Get Started</h2>
+      <p data-i18n="gs.desc"></p>
+    </div>
+
+    <div class="gs-steps">
+
+      <!-- Step 1: Install -->
+      <div class="gs-step">
+        <div class="gs-step-num">1</div>
+        <div class="gs-step-body">
+          <h3 data-i18n="s1.title"></h3>
+          <p data-i18n="s1.desc"></p>
+
+          <div class="code-tabs" data-group="install">
+            <button class="code-tab active" data-target="install-npm">npm</button>
+            <button class="code-tab" data-target="install-cdn">CDN</button>
+          </div>
+          <div class="code-wrap">
+            <div class="code-panel active" id="install-npm">
+              <pre><code class="language-bash">npm install tubeplayer</code></pre>
+              <button class="copy-btn" data-i18n="copy"></button>
+            </div>
+            <div class="code-panel" id="install-cdn">
+              <pre><code class="language-html">&lt;!-- CSS --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tubeplayer/dist/style.css" /&gt;
+
+&lt;!-- JS (UMD) --&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/tubeplayer/dist/tubeplayer.umd.js"&gt;&lt;/script&gt;</code></pre>
+              <button class="copy-btn" data-i18n="copy"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: HTML -->
+      <div class="gs-step">
+        <div class="gs-step-num">2</div>
+        <div class="gs-step-body">
+          <h3 data-i18n="s2.title"></h3>
+          <p data-i18n-html="s2.desc"></p>
+
+          <div class="code-wrap code-wrap--solo">
+            <pre><code class="language-html" data-i18n-code="code.html"></code></pre>
+            <button class="copy-btn" data-i18n="copy"></button>
+          </div>
+
+          <!-- Layer attribute table -->
+          <div class="attr-section">
+            <p class="attr-section-title">
+              <span data-i18n="sec.layer"></span>
+              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-layer]</code>
+            </p>
+            <div class="table-wrap">
+              <table class="attr-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th.attr"></th>
+                    <th data-i18n="th.type"></th>
+                    <th data-i18n="th.default"></th>
+                    <th data-i18n="th.desc"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>data-tube-layer</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n-html="ad.layer"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-animation</code></td>
+                    <td class="type">"fade"</td>
+                    <td class="default">"fade"</td>
+                    <td class="desc" data-i18n="ad.anim"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-close-on-dim</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.dim"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- YouTube attribute table -->
+          <div class="attr-section">
+            <p class="attr-section-title">
+              <span data-i18n="sec.yt"></span>
+              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-youtube]</code>
+            </p>
+            <div class="table-wrap">
+              <table class="attr-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th.attr"></th>
+                    <th data-i18n="th.type"></th>
+                    <th data-i18n="th.default"></th>
+                    <th data-i18n="th.desc"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>data-tube-youtube</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n-html="ad.ytid"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-autoplay</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.autoplay"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-theme</code></td>
+                    <td class="type">"dark"</td>
+                    <td class="default">"dark"</td>
+                    <td class="desc" data-i18n="ad.theme"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-controls</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n-html="ad.controls"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Init -->
+      <div class="gs-step">
+        <div class="gs-step-num">3</div>
+        <div class="gs-step-body">
+          <h3 data-i18n="s3.title"></h3>
+          <p data-i18n-html="s3.desc"></p>
+
+          <div class="code-tabs" data-group="init">
+            <button class="code-tab active" data-target="init-esm">ES Module</button>
+            <button class="code-tab" data-i18n="tab.umd" data-target="init-umd"></button>
+          </div>
+          <div class="code-wrap">
+            <div class="code-panel active" id="init-esm">
+              <pre><code class="language-js">import TubePlayer from 'tubeplayer';
+import 'tubeplayer/style.css';
+
+TubePlayer.init();</code></pre>
+              <button class="copy-btn" data-i18n="copy"></button>
+            </div>
+            <div class="code-panel" id="init-umd">
+              <pre><code class="language-html" data-i18n-code="code.umd"></code></pre>
+              <button class="copy-btn" data-i18n="copy"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Events -->
+      <div class="gs-step">
+        <div class="gs-step-num">4</div>
+        <div class="gs-step-body">
+          <h3 data-i18n="s4.title"></h3>
+          <p data-i18n-html="s4.desc"></p>
+
+          <div class="code-wrap code-wrap--solo">
+            <pre><code class="language-js" data-i18n-code="code.events"></code></pre>
+            <button class="copy-btn" data-i18n="copy"></button>
+          </div>
+
+          <div class="attr-section">
+            <p class="attr-section-title" data-i18n="sec.events"></p>
+            <div class="events-grid">
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">layer:open</span></div>
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">layer:close</span></div>
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">video:play</span></div>
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">video:pause</span></div>
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">video:end</span></div>
+              <div class="event-item"><span class="event-dot"></span><span class="event-name">video:ready</span></div>
+            </div>
+          </div>
+
+          <div class="attr-section">
+            <p class="attr-section-title" data-i18n="sec.kb"></p>
+            <div class="shortcuts-row">
+              <div class="shortcut-item"><kbd>Space</kbd><span data-i18n="kb.space"></span></div>
+              <div class="shortcut-item"><kbd>Esc</kbd><span data-i18n="kb.esc"></span></div>
+              <div class="shortcut-item"><kbd>M</kbd><span data-i18n="kb.m"></span></div>
+              <div class="shortcut-item"><kbd>F</kbd><span data-i18n="kb.f"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.gs-steps -->
+  </section>
+
+  <div class="section-divider"></div>
+
+  <footer class="site-footer">
+    <a href="https://github.com/hellomrma/tube-player" target="_blank">TubePlayer</a>
+    &nbsp;·&nbsp; MIT License &nbsp;·&nbsp; Vanilla JS
+  </footer>
+
+  <!-- ─── Layer & Player ────────────────────────────────── -->
   <div data-tube-layer="trailer"
        data-tube-close-on-dim="true"
        data-tube-animation="fade">
@@ -265,15 +844,232 @@
   <script type="module">
     import TubePlayer from '../src/index.js';
 
+    // ─── i18n ─────────────────────────────────────────────
+    const TRANSLATIONS = {
+      ko: {
+        'hero.desc':   '프레임워크에 구애받지 않는 Vanilla JS 기반의<br />커스텀 YouTube 팝업 플레이어 라이브러리입니다.',
+        'hero.open':   '데모 열기',
+        'gs.desc':     '몇 줄의 코드로 YouTube 팝업 플레이어를 완성하세요.',
+        's1.title':    '설치',
+        's1.desc':     'npm 또는 CDN으로 TubePlayer를 프로젝트에 추가합니다.',
+        's2.title':    'HTML 마크업',
+        's2.desc':     '레이어 컨테이너와 YouTube 플레이어를 <code class="ic">data</code> 속성으로 선언하고, 열기 버튼에 <code class="ic">data-tube-open</code>을 지정합니다.',
+        's3.title':    '초기화',
+        's3.desc':     '스크립트를 불러오고 <code class="ic">TubePlayer.init()</code>을 호출합니다.',
+        's4.title':    '이벤트 (선택)',
+        's4.desc':     '<code class="ic">TubePlayer.get(id)</code>로 레이어 인스턴스를 가져와 이벤트를 구독합니다.',
+        'tab.umd':     'UMD / CDN',
+        'th.attr':     '속성',
+        'th.type':     '타입',
+        'th.default':  '기본값',
+        'th.desc':     '설명',
+        'sec.layer':   '레이어 속성',
+        'sec.yt':      'YouTube 플레이어 속성',
+        'sec.events':  '지원 이벤트',
+        'sec.kb':      '키보드 단축키',
+        'ad.layer':    '레이어 고유 ID. <code>data-tube-open</code>과 매핑됩니다.',
+        'ad.anim':     '레이어 열기/닫기 애니메이션 종류.',
+        'ad.dim':      '딤(배경) 클릭 시 레이어를 닫습니다.',
+        'ad.ytid':     'YouTube 영상 ID (URL의 <code>v=</code> 값).',
+        'ad.autoplay': '레이어가 열릴 때 자동으로 재생합니다.',
+        'ad.theme':    '플레이어 컨트롤 테마.',
+        'ad.controls': '활성화할 컨트롤 목록 (쉼표 구분).<br/>예: <code>"mute,fullscreen"</code>',
+        'kb.space':    '재생 / 일시정지',
+        'kb.esc':      '레이어 닫기',
+        'kb.m':        '음소거 토글',
+        'kb.f':        '전체화면 토글',
+        'copy':        '복사',
+        'copied':      '복사됨!',
+        'code.html':
+`<!-- 열기 버튼 -->
+<button data-tube-open="my-video">영상 보기</button>
+
+<!-- 레이어 + 플레이어 -->
+<div data-tube-layer="my-video"
+     data-tube-close-on-dim="true"
+     data-tube-animation="fade">
+  <div data-tube-youtube="B868ddnPpsc"
+       data-tube-autoplay="true"
+       data-tube-theme="dark"
+       data-tube-controls="mute,fullscreen">
+  </div>
+</div>`,
+        'code.umd':
+`<!-- CDN으로 불러온 경우 전역 TubePlayer 사용 -->
+<script>
+  TubePlayer.init();
+<\/script>`,
+        'code.events':
+`const layer = TubePlayer.get('my-video');
+
+layer.on('layer:open',   () => console.log('레이어 열림'));
+layer.on('layer:close',  () => console.log('레이어 닫힘'));
+layer.on('video:play',   () => console.log('재생 시작'));
+layer.on('video:pause',  () => console.log('일시정지'));
+layer.on('video:end',    () => console.log('재생 종료'));`,
+      },
+
+      en: {
+        'hero.desc':   'A framework-agnostic Vanilla JS library for<br />custom YouTube popup players.',
+        'hero.open':   'Open Demo',
+        'gs.desc':     'Set up a YouTube popup player in just a few lines of code.',
+        's1.title':    'Install',
+        's1.desc':     'Add TubePlayer to your project via npm or CDN.',
+        's2.title':    'HTML Markup',
+        's2.desc':     'Declare the layer and player using <code class="ic">data</code> attributes, and add <code class="ic">data-tube-open</code> to the trigger element.',
+        's3.title':    'Initialize',
+        's3.desc':     'Import the script and call <code class="ic">TubePlayer.init()</code>.',
+        's4.title':    'Events (optional)',
+        's4.desc':     'Get a layer instance with <code class="ic">TubePlayer.get(id)</code> and subscribe to events.',
+        'tab.umd':     'UMD / CDN',
+        'th.attr':     'Attribute',
+        'th.type':     'Type',
+        'th.default':  'Default',
+        'th.desc':     'Description',
+        'sec.layer':   'Layer Attributes',
+        'sec.yt':      'YouTube Player Attributes',
+        'sec.events':  'Supported Events',
+        'sec.kb':      'Keyboard Shortcuts',
+        'ad.layer':    'Unique layer ID. Matched by <code>data-tube-open</code>.',
+        'ad.anim':     'Animation type for open / close.',
+        'ad.dim':      'Close the layer when the dim overlay is clicked.',
+        'ad.ytid':     'YouTube video ID (the <code>v=</code> value in the URL).',
+        'ad.autoplay': 'Automatically play when the layer opens.',
+        'ad.theme':    'Control bar color theme.',
+        'ad.controls': 'Comma-separated list of controls to enable.<br/>e.g. <code>"mute,fullscreen"</code>',
+        'kb.space':    'Play / Pause',
+        'kb.esc':      'Close layer',
+        'kb.m':        'Toggle mute',
+        'kb.f':        'Toggle fullscreen',
+        'copy':        'Copy',
+        'copied':      'Copied!',
+        'code.html':
+`<!-- Open trigger -->
+<button data-tube-open="my-video">Watch Video</button>
+
+<!-- Layer + Player -->
+<div data-tube-layer="my-video"
+     data-tube-close-on-dim="true"
+     data-tube-animation="fade">
+  <div data-tube-youtube="B868ddnPpsc"
+       data-tube-autoplay="true"
+       data-tube-theme="dark"
+       data-tube-controls="mute,fullscreen">
+  </div>
+</div>`,
+        'code.umd':
+`<!-- When loaded via CDN, use the global TubePlayer -->
+<script>
+  TubePlayer.init();
+<\/script>`,
+        'code.events':
+`const layer = TubePlayer.get('my-video');
+
+layer.on('layer:open',   () => console.log('layer opened'));
+layer.on('layer:close',  () => console.log('layer closed'));
+layer.on('video:play',   () => console.log('playback started'));
+layer.on('video:pause',  () => console.log('playback paused'));
+layer.on('video:end',    () => console.log('playback ended'));`,
+      },
+    };
+
+    function applyTranslations(lang, { rehighlight = false } = {}) {
+      const t = TRANSLATIONS[lang];
+      if (!t) return;
+
+      document.documentElement.lang = lang;
+      localStorage.setItem('tube-lang', lang);
+
+      // Update toggle button states
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      // data-i18n → textContent
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+      });
+
+      // data-i18n-html → innerHTML
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const v = t[el.dataset.i18nHtml];
+        if (v !== undefined) el.innerHTML = v;
+      });
+
+      // data-i18n-code → textContent, re-highlight when switching
+      document.querySelectorAll('[data-i18n-code]').forEach(el => {
+        const v = t[el.dataset.i18nCode];
+        if (v === undefined) return;
+        if (rehighlight) {
+          el.removeAttribute('data-highlighted');
+          el.className = el.className.replace(/\bhljs\b/g, '').trim();
+        }
+        el.textContent = v;
+        if (rehighlight) hljs.highlightElement(el);
+      });
+    }
+
+    // Initial language: localStorage → browser → 'en'
+    const initLang = localStorage.getItem('tube-lang')
+      || (navigator.language.startsWith('ko') ? 'ko' : 'en');
+
+    applyTranslations(initLang);
+
+    // ─── Syntax Highlight (initial, all blocks) ───────────
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+
+    // ─── Language toggle click ────────────────────────────
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.lang !== document.documentElement.lang) {
+          applyTranslations(btn.dataset.lang, { rehighlight: true });
+        }
+      });
+    });
+
+    // ─── TubePlayer ──────────────────────────────────────
     TubePlayer.init();
 
-    // 이벤트 리스닝 예시
     const trailer = TubePlayer.get('trailer');
     if (trailer) {
-      trailer.on('layer:open', () => console.log('[demo] 레이어 열림'));
-      trailer.on('layer:close', () => console.log('[demo] 레이어 닫힘'));
-      trailer.on('video:play', () => console.log('[demo] 재생 시작'));
+      trailer.on('layer:open',  () => console.log('[demo] layer opened'));
+      trailer.on('layer:close', () => console.log('[demo] layer closed'));
+      trailer.on('video:play',  () => console.log('[demo] playback started'));
     }
+
+    // ─── Tab switching ───────────────────────────────────
+    document.querySelectorAll('.code-tabs').forEach(tabs => {
+      tabs.querySelectorAll('.code-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.dataset.target;
+          const wrap = tabs.nextElementSibling;
+
+          tabs.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          wrap.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+          wrap.querySelector('#' + targetId)?.classList.add('active');
+        });
+      });
+    });
+
+    // ─── Copy buttons ────────────────────────────────────
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.closest('.code-panel, .code-wrap')
+          ?.querySelector('code')?.innerText ?? '';
+        navigator.clipboard.writeText(code).then(() => {
+          const t = TRANSLATIONS[document.documentElement.lang] ?? TRANSLATIONS['en'];
+          btn.textContent = t['copied'];
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = t['copy'];
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+    });
   </script>
 
 </body>
