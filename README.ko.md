@@ -7,28 +7,45 @@
 [![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
 [![demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tubeplayer.playgrounder.dev/)
 
-커스텀 YouTube 팝업 플레이어 라이브러리.
+YouTube 영상을 **내 방식**으로 — YouTube 방식이 아닌.
 
-YouTube 기본 UI를 완전히 숨기고, 커스텀 컨트롤과 팝업 레이어를 제공합니다.
-프레임워크 비종속 Vanilla JS 코어 기반으로 설계되었습니다.
+TubePlayer는 YouTube 기본 UI를 완전히 걷어내고, 커스텀 컨트롤과 세련된 팝업 레이어로 대체합니다. YouTube 로고도, 추천 영상도, 불필요한 UI도 없습니다. 오직 당신의 콘텐츠와 브랜드만.
 
 **[라이브 데모 →](https://tubeplayer.playgrounder.dev/)**
 
-## 특징
+## 왜 TubePlayer인가?
 
-- **YouTube UI 완전 차단:** 포스터 + 오버레이 기법을 통해 YouTube의 로고 및 컨트롤을 완벽히 숨김.
-- **모바일 최적화:** `clamp()` 기반 유동 타이포그래피, 반응형 레이아웃, 아래로 스와이프하여 닫기 제스처 지원.
-- **팝업 시스템:** 딤(Dim), 포커스 트랩, ESC 키/딤 클릭 시 닫기, 3가지 애니메이션(Fade, Slide, Zoom).
-- **고도화된 전체화면:** 모바일 브라우저에서도 영상이 화면에 꽉 차도록 최적화된 전체화면 모드 지원.
-- **레이어 재오픈 로직:** 레이어를 다시 열 때 영상이 항상 처음(`data-tube-start` 기준)부터 재생되도록 자동 제어.
-- **반복 재생 & 시작 시간:** `data-tube-loop`로 반복 재생, `data-tube-start`로 특정 초부터 시작.
-- **영상 종료 시 자동 닫기:** `data-tube-close-on-end`로 영상이 끝나면 레이어 자동 닫기.
-- **커스텀 포스터:** `data-tube-poster`로 YouTube 썸네일 대신 원하는 이미지 지정.
-- **볼륨 상태 유지:** 음소거 및 볼륨 수준을 `localStorage`에 저장하여 다음 방문 시 자동 복원.
-- **재생 속도 컨트롤:** `data-tube-controls`에 `speed` 추가로 0.5× – 2× 속도 조절 지원.
-- **커스터마이징:** CSS 변수 기반 테마 시스템 및 데이터 속성을 이용한 선언적 초기화.
-- **번들 지원:** ESM / CJS / UMD 포맷 제공으로 다양한 환경에서 사용 가능.
-- **다국어 데모 페이지:** 브라우저 언어 설정에 따라 한국어/영어 자동 전환되는 Get Started 가이드 내장.
+> HTML에 YouTube 영상을 넣고, 완전히 브랜드화된 팝업 경험을 5분 안에 구현하세요.
+
+- **내 브랜드, YouTube 아님** — 로고, 컨트롤, 엔드 스크린 추천 영상까지 완벽히 차단.
+- **어디서든 동작** — 프레임워크 비종속 Vanilla JS. React, Vue, 순수 HTML — 모두 지원.
+- **모바일 퍼스트** — 스와이프로 닫기, 터치 최적화 컨트롤, 모든 기기에서 완벽한 전체화면.
+- **의존성 제로** — jQuery도, lodash도 없음. 순수 ES Modules, 약 7 kB (gzip).
+- **선언적 설정** — HTML에 `data-tube-*` 속성을 추가하고 `TubePlayer.init()` 호출 끝.
+
+## 기능
+
+### 팝업 & UX
+- 딤 오버레이, 포커스 트랩, 3가지 애니메이션(Fade / Slide / Zoom)
+- ESC, 딤 클릭, 또는 아래로 스와이프(모바일)로 닫기
+- 볼륨 및 음소거 상태를 `localStorage`에 저장하여 재방문 시 자동 복원
+- 레이어를 다시 열면 항상 깔끔하게 처음부터 재생
+
+### 재생 제어
+- 커스텀 컨트롤 바: 재생/일시정지, 시크 바, 시간 표시, 음소거, 볼륨 슬라이더, 전체화면, 속도, YouTube 링크
+- 재생 속도 순환: 0.5× → 0.75× → 1× → 1.25× → 1.5× → 2×
+- 시작 시간(`data-tube-start`), 반복 재생(`data-tube-loop`), 영상 종료 시 자동 닫기(`data-tube-close-on-end`)
+- 키보드 단축키 지원 — Space, M, F, ←/→ (터치 기기에서는 자동 숨김)
+
+### 커스터마이징
+- 커스텀 포스터 이미지로 YouTube 썸네일 대체
+- CSS 변수 기반 테마 시스템 — 한 줄로 브랜드 컬러 적용
+- `data-tube-*` HTML 속성 또는 JavaScript API로 완전한 선언적 설정 가능
+
+### 개발자 경험
+- ESM / CJS / UMD 번들 포맷 — 모든 환경에서 사용 가능
+- TypeScript 타입 정의 포함
+- 경량: 약 7 kB gzipped (코어)
 
 ## 설치
 

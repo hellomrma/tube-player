@@ -7,28 +7,45 @@
 [![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
 [![demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tubeplayer.playgrounder.dev/)
 
-A custom YouTube popup player library built with Vanilla JS.
+Embed YouTube videos the way **you** want — not the way YouTube wants.
 
-Completely hides the default YouTube UI and replaces it with custom controls and a popup layer system.
-Designed as a framework-agnostic Vanilla JS core.
+TubePlayer completely replaces the default YouTube UI with your own custom controls and a beautiful popup layer system. No YouTube logo. No suggested videos. No distractions. Just your content, your brand.
 
 **[Live Demo →](https://tubeplayer.playgrounder.dev/)**
 
+## Why TubePlayer?
+
+> Drop a YouTube video into any webpage — with a fully branded popup experience in under 5 minutes.
+
+- **Your brand, not YouTube's** — Completely hides YouTube's logo, controls, and end-screen suggestions.
+- **Works everywhere** — Framework-agnostic Vanilla JS. React, Vue, plain HTML — it just works.
+- **Mobile-first** — Swipe-to-close, touch-optimized controls, and flawless fullscreen on every device.
+- **Zero dependencies** — No jQuery, no lodash, no bloat. Pure ES Modules at ~7 kB gzipped.
+- **Declarative setup** — Add `data-tube-*` attributes to your HTML and call `TubePlayer.init()`. Done.
+
 ## Features
 
-- **Full YouTube UI blocking:** Hides YouTube's logo, controls, and related videos via poster + overlay technique.
-- **Mobile-optimized:** Fluid typography with `clamp()`, responsive layout, and swipe-down-to-close gesture.
-- **Popup system:** Dim overlay, focus trap, close on ESC / dim click, three animations (Fade, Slide, Zoom).
-- **Advanced fullscreen:** Fullscreen mode optimized to fill the screen even on mobile browsers.
-- **Reopen logic:** Playback always restarts from the beginning (or `data-tube-start`) when a layer is reopened.
-- **Loop & start time:** `data-tube-loop` for repeat playback, `data-tube-start` to begin at a specific second.
-- **Auto-close on end:** `data-tube-close-on-end` automatically closes the layer when the video finishes.
-- **Custom poster:** `data-tube-poster` overrides the YouTube thumbnail with your own image.
-- **Volume persistence:** Mute and volume level are saved to `localStorage` and restored on next visit.
-- **Speed control:** Built-in playback speed control (0.5× – 2×) via `speed` in `data-tube-controls`.
-- **Customizable:** Declarative initialization via data attributes and a CSS variable-based theme system.
-- **Bundle formats:** ESM / CJS / UMD — works in any environment.
-- **Multilingual demo:** Built-in Get Started guide that switches between Korean and English based on browser language (or manual toggle).
+### Popup & UX
+- Smooth popup layer with dim overlay, focus trap, and 3 animations (Fade / Slide / Zoom)
+- Close on ESC, dim click, or swipe down (mobile)
+- Remembers volume and mute state across visits via `localStorage`
+- Playback always restarts cleanly when the layer is reopened
+
+### Playback Control
+- Custom control bar: play/pause, seek bar, time display, mute, volume slider, fullscreen, speed, YouTube link
+- Playback speed cycling: 0.5× → 0.75× → 1× → 1.25× → 1.5× → 2×
+- Set a start time (`data-tube-start`), loop playback (`data-tube-loop`), or auto-close on video end (`data-tube-close-on-end`)
+- Full keyboard shortcuts — Space, M, F, ←/→ (auto-hidden on touch devices)
+
+### Customization
+- Custom poster image to replace the YouTube thumbnail
+- CSS variable-based theme system — one line to apply your brand color
+- Fully declarative via `data-tube-*` HTML attributes or JavaScript API
+
+### Developer Experience
+- ESM / CJS / UMD bundle formats — works in any environment
+- TypeScript type definitions included
+- Lightweight: ~7 kB gzipped (core)
 
 ## Installation
 
