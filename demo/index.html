@@ -1,9 +1,65 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TubePlayer — YouTube Popup Player</title>
+  <title>TubePlayer — Custom YouTube Popup Player Library</title>
+  <meta name="description" content="TubePlayer is a lightweight JavaScript library that completely hides the YouTube UI and delivers a fully branded popup video experience. Custom controls, mobile-optimized, framework-agnostic." />
+  <meta name="keywords" content="youtube popup player, youtube embed, custom youtube player, youtube modal, video popup, custom controls, vanilla js video player, youtube iframe api, tubeplayer" />
+  <meta name="author" content="hellomrma" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://tubeplayer.playgrounder.dev/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="TubePlayer" />
+  <meta property="og:title" content="TubePlayer — Custom YouTube Popup Player Library" />
+  <meta property="og:description" content="Hide the YouTube UI completely. Deliver a fully branded popup video experience with custom controls, animations, and mobile support — in just a few lines of code." />
+  <meta property="og:url" content="https://tubeplayer.playgrounder.dev/" />
+  <meta property="og:image" content="https://tubeplayer.playgrounder.dev/tubeplayer-logo.png" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ko_KR" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TubePlayer — Custom YouTube Popup Player Library" />
+  <meta name="twitter:description" content="Hide the YouTube UI completely. Deliver a fully branded popup video experience with custom controls, animations, and mobile support." />
+  <meta name="twitter:image" content="https://tubeplayer.playgrounder.dev/tubeplayer-logo.png" />
+
+  <!-- hreflang -->
+  <link rel="alternate" hreflang="en" href="https://tubeplayer.playgrounder.dev/" />
+  <link rel="alternate" hreflang="ko" href="https://tubeplayer.playgrounder.dev/" />
+  <link rel="alternate" hreflang="x-default" href="https://tubeplayer.playgrounder.dev/" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TubePlayer",
+    "description": "TubePlayer is a lightweight, framework-agnostic JavaScript library that completely replaces the YouTube UI with custom popup controls. Features include popup animations (fade, slide, zoom), loop playback, start time, auto-close on end, control customization, custom poster images, mobile fullscreen support, volume persistence, and speed control.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "url": "https://tubeplayer.playgrounder.dev/",
+    "downloadUrl": "https://www.npmjs.com/package/tubeplayer",
+    "softwareVersion": "0.2.1",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "hellomrma",
+      "url": "https://github.com/hellomrma"
+    },
+    "codeRepository": "https://github.com/hellomrma/tube-player",
+    "license": "https://opensource.org/licenses/MIT",
+    "programmingLanguage": "JavaScript",
+    "keywords": "youtube player, popup player, youtube embed, custom controls, vanilla js, mobile video"
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="./tubeplayer-logo.png" />
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
@@ -76,6 +132,16 @@
       background: linear-gradient(135deg, #fff 0%, #ff4d4d 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .h1-sub {
+      font-weight: 300;
+      font-size: clamp(18px, 4vw, 24px);
+      color: var(--text-secondary);
+      background: none;
+      -webkit-text-fill-color: var(--text-secondary);
+      display: block;
+      margin-top: 4px;
     }
 
     p.desc {
@@ -689,8 +755,8 @@
       <img src="./tubeplayer-logo.png" alt="TubePlayer Logo" />
     </div>
 
-    <h1><span>TubePlayer</span></h1>
-    <p class="desc" data-i18n-html="hero.desc"></p>
+    <h1><span>TubePlayer</span> <span class="h1-sub">YouTube Popup Player</span></h1>
+    <p class="desc" data-i18n-html="hero.desc">Hide the YouTube UI completely.<br />Deliver a fully branded popup video experience.</p>
 
     <div class="hero-buttons">
       <button class="btn" data-tube-open="trailer">
@@ -715,8 +781,8 @@
   <section class="features-demo" id="features">
     <div class="gs-header">
       <span class="gs-label">Features</span>
-      <h2 data-i18n="fd.title"></h2>
-      <p data-i18n="fd.desc"></p>
+      <h2 data-i18n="fd.title">Features</h2>
+      <p data-i18n="fd.desc">See what TubePlayer can do — hands on.</p>
     </div>
 
     <div class="features-grid">
@@ -724,8 +790,8 @@
       <!-- Card 1: Popup Animations -->
       <div class="feature-card">
         <span class="feature-card__badge badge--popup">POPUP</span>
-        <div class="feature-card__title" data-i18n="fd.anim.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.anim.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.anim.title">Popup Animations</div>
+        <div class="feature-card__desc" data-i18n="fd.anim.desc">Choose from 3 animation types when opening and closing the layer.</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-fade">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -746,8 +812,8 @@
       <!-- Card 2: Loop Playback -->
       <div class="feature-card">
         <span class="feature-card__badge badge--play">PLAYBACK</span>
-        <div class="feature-card__title" data-i18n="fd.loop.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.loop.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.loop.title">Loop Playback</div>
+        <div class="feature-card__desc" data-i18n="fd.loop.desc">The video automatically restarts from the beginning when it ends.</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-loop">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -760,8 +826,8 @@
       <!-- Card 3: Start Time -->
       <div class="feature-card">
         <span class="feature-card__badge badge--play">PLAYBACK</span>
-        <div class="feature-card__title" data-i18n="fd.start.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.start.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.start.title">Start Time</div>
+        <div class="feature-card__desc" data-i18n="fd.start.desc">Playback begins at a specific second (0:45 into the video).</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-start">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -774,8 +840,8 @@
       <!-- Card 4: Auto-close on End -->
       <div class="feature-card">
         <span class="feature-card__badge badge--play">PLAYBACK</span>
-        <div class="feature-card__title" data-i18n="fd.closeend.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.closeend.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.closeend.title">Auto-close on End</div>
+        <div class="feature-card__desc" data-i18n="fd.closeend.desc">The layer closes automatically when the video finishes. (starts at 3:20)</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-close-end">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -788,8 +854,8 @@
       <!-- Card 5: Control Customization -->
       <div class="feature-card">
         <span class="feature-card__badge badge--control">CONTROLS</span>
-        <div class="feature-card__title" data-i18n="fd.ctrl.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.ctrl.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.ctrl.title">Control Customization</div>
+        <div class="feature-card__desc" data-i18n="fd.ctrl.desc">Show only what you need, or enable the full control bar with speed control.</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-ctrl-min">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -806,8 +872,8 @@
       <!-- Card 6: Custom Poster -->
       <div class="feature-card">
         <span class="feature-card__badge badge--custom">CUSTOM</span>
-        <div class="feature-card__title" data-i18n="fd.poster.title"></div>
-        <div class="feature-card__desc" data-i18n="fd.poster.desc"></div>
+        <div class="feature-card__title" data-i18n="fd.poster.title">Custom Poster</div>
+        <div class="feature-card__desc" data-i18n="fd.poster.desc">Use your own image as the poster instead of the YouTube thumbnail. Visible when paused.</div>
         <div class="feature-card__actions">
           <button class="demo-btn" data-tube-open="demo-poster">
             <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
@@ -833,7 +899,7 @@
     <div class="gs-header">
       <span class="gs-label">Documentation</span>
       <h2>Get Started</h2>
-      <p data-i18n="gs.desc"></p>
+      <p data-i18n="gs.desc">Set up a YouTube popup player in just a few lines of code.</p>
     </div>
 
     <div class="gs-steps">
@@ -842,8 +908,8 @@
       <div class="gs-step">
         <div class="gs-step-num">1</div>
         <div class="gs-step-body">
-          <h3 data-i18n="s1.title"></h3>
-          <p data-i18n="s1.desc"></p>
+          <h3 data-i18n="s1.title">Install</h3>
+          <p data-i18n="s1.desc">Add TubePlayer to your project via npm or CDN.</p>
 
           <div class="code-tabs" data-group="install">
             <button class="code-tab active" data-target="install-npm">npm</button>
@@ -852,7 +918,7 @@
           <div class="code-wrap">
             <div class="code-panel active" id="install-npm">
               <pre><code class="language-bash">npm install tubeplayer</code></pre>
-              <button class="copy-btn" data-i18n="copy"></button>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
             </div>
             <div class="code-panel" id="install-cdn">
               <pre><code class="language-html">&lt;!-- CSS --&gt;
@@ -860,7 +926,7 @@
 
 &lt;!-- JS (UMD) --&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/tubeplayer/dist/tubeplayer.umd.js"&gt;&lt;/script&gt;</code></pre>
-              <button class="copy-btn" data-i18n="copy"></button>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
             </div>
           </div>
         </div>
@@ -870,12 +936,12 @@
       <div class="gs-step">
         <div class="gs-step-num">2</div>
         <div class="gs-step-body">
-          <h3 data-i18n="s2.title"></h3>
-          <p data-i18n-html="s2.desc"></p>
+          <h3 data-i18n="s2.title">HTML Markup</h3>
+          <p data-i18n-html="s2.desc">Declare the layer and player using <code class="ic">data</code> attributes, and add <code class="ic">data-tube-open</code> to the trigger element.</p>
 
           <div class="code-wrap code-wrap--solo">
             <pre><code class="language-html" data-i18n-code="code.html"></code></pre>
-            <button class="copy-btn" data-i18n="copy"></button>
+            <button class="copy-btn" data-i18n="copy">Copy</button>
           </div>
 
           <!-- Layer attribute table -->
@@ -970,8 +1036,8 @@
       <div class="gs-step">
         <div class="gs-step-num">3</div>
         <div class="gs-step-body">
-          <h3 data-i18n="s3.title"></h3>
-          <p data-i18n-html="s3.desc"></p>
+          <h3 data-i18n="s3.title">Initialize</h3>
+          <p data-i18n-html="s3.desc">Import the script and call <code class="ic">TubePlayer.init()</code>.</p>
 
           <div class="code-tabs" data-group="init">
             <button class="code-tab active" data-target="init-esm">ES Module</button>
@@ -983,11 +1049,11 @@
 import 'tubeplayer/style.css';
 
 TubePlayer.init();</code></pre>
-              <button class="copy-btn" data-i18n="copy"></button>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
             </div>
             <div class="code-panel" id="init-umd">
               <pre><code class="language-html" data-i18n-code="code.umd"></code></pre>
-              <button class="copy-btn" data-i18n="copy"></button>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
             </div>
           </div>
         </div>
@@ -997,12 +1063,12 @@ TubePlayer.init();</code></pre>
       <div class="gs-step">
         <div class="gs-step-num">4</div>
         <div class="gs-step-body">
-          <h3 data-i18n="s4.title"></h3>
-          <p data-i18n-html="s4.desc"></p>
+          <h3 data-i18n="s4.title">Events (optional)</h3>
+          <p data-i18n-html="s4.desc">Get a layer instance with <code class="ic">TubePlayer.get(id)</code> and subscribe to events.</p>
 
           <div class="code-wrap code-wrap--solo">
             <pre><code class="language-js" data-i18n-code="code.events"></code></pre>
-            <button class="copy-btn" data-i18n="copy"></button>
+            <button class="copy-btn" data-i18n="copy">Copy</button>
           </div>
 
           <div class="attr-section">
