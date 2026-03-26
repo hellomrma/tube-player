@@ -342,27 +342,65 @@
       padding: 80px 24px 100px;
     }
     .inline-showcase {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 16px;
-      margin-top: 48px;
-      align-items: start;
-    }
-    .inline-showcase__side {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+      margin-top: 48px;
+    }
+    .inline-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.02);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+    .inline-card:hover { border-color: rgba(255,255,255,0.13); }
+    .inline-card__meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .inline-card__info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .inline-card__snippet {
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 360px;
     }
     .inline-showcase__label {
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+    .inline-variants {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .inline-variants .inline-card__snippet {
+      max-width: 100%;
+      white-space: normal;
+      word-break: break-all;
     }
     @media (max-width: 700px) {
-      .inline-showcase { grid-template-columns: 1fr; }
+      .inline-variants { grid-template-columns: 1fr; }
+      .inline-card__snippet { display: none; }
     }
 
     /* ─── Get Started ───────────────────────────────────── */
@@ -956,8 +994,16 @@
     </div>
 
     <div class="inline-showcase">
-      <div class="inline-showcase__main">
-        <div class="inline-showcase__label" data-i18n="id.full">Full Controls</div>
+
+      <!-- Hero: Full Controls -->
+      <div class="inline-card">
+        <div class="inline-card__meta">
+          <div class="inline-card__info">
+            <span class="feature-card__badge badge--control">FULL</span>
+            <span class="inline-showcase__label" data-i18n="id.full">Full Controls</span>
+          </div>
+          <div class="inline-card__snippet">data-tube-controls="play,progress,time,mute,volume,fullscreen,speed"</div>
+        </div>
         <div data-tube-inline="jNQXAC9IVRw"
              id="inline-full"
              data-tube-theme="dark"
@@ -966,18 +1012,32 @@
         </div>
       </div>
 
-      <div class="inline-showcase__side">
-        <div>
-          <div class="inline-showcase__label" data-i18n="id.minimal">Minimal Controls</div>
+      <!-- Variants: 3-column grid -->
+      <div class="inline-variants">
+
+        <div class="inline-card">
+          <div class="inline-card__meta">
+            <div class="inline-card__info">
+              <span class="feature-card__badge badge--play">MINIMAL</span>
+              <span class="inline-showcase__label" data-i18n="id.minimal">Minimal Controls</span>
+            </div>
+          </div>
           <div data-tube-inline="jNQXAC9IVRw"
                id="inline-minimal"
                data-tube-theme="dark"
                data-tube-controls="mute,fullscreen"
                data-tube-autoplay="false">
           </div>
+          <div class="inline-card__snippet">data-tube-controls="mute,fullscreen"</div>
         </div>
-        <div>
-          <div class="inline-showcase__label" data-i18n="id.loop">Loop</div>
+
+        <div class="inline-card">
+          <div class="inline-card__meta">
+            <div class="inline-card__info">
+              <span class="feature-card__badge badge--popup">LOOP</span>
+              <span class="inline-showcase__label" data-i18n="id.loop">Loop</span>
+            </div>
+          </div>
           <div data-tube-inline="jNQXAC9IVRw"
                id="inline-loop"
                data-tube-theme="dark"
@@ -985,9 +1045,16 @@
                data-tube-loop="true"
                data-tube-autoplay="false">
           </div>
+          <div class="inline-card__snippet">data-tube-loop="true"</div>
         </div>
-        <div>
-          <div class="inline-showcase__label" data-i18n="id.none">No Controls</div>
+
+        <div class="inline-card">
+          <div class="inline-card__meta">
+            <div class="inline-card__info">
+              <span class="feature-card__badge badge--inline">NO CONTROLS</span>
+              <span class="inline-showcase__label" data-i18n="id.none">No Controls</span>
+            </div>
+          </div>
           <div data-tube-inline="jNQXAC9IVRw"
                id="inline-none"
                data-tube-theme="dark"
@@ -995,7 +1062,9 @@
                data-tube-autoplay="true"
                data-tube-muted="true">
           </div>
+          <div class="inline-card__snippet">data-tube-no-interaction="true"</div>
         </div>
+
       </div>
     </div>
   </section>
