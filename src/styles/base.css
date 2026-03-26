@@ -230,11 +230,6 @@
   pointer-events: none;
 }
 
-.tube-youtube__center-btn svg {
-  width: 55%;
-  height: 55%;
-}
-
 .tube-youtube__center-btn:hover {
   background: rgba(0, 0, 0, 0.75);
 }
@@ -244,15 +239,24 @@
   display: none;
 }
 
+/* 아이콘 표시 시 span을 레이아웃에서 제거해 SVG가 버튼 flex의 직접 자식이 되도록 함 */
+.tube-youtube__overlay--playing .tube-youtube__center-icon--pause,
+.tube-youtube__overlay--paused .tube-youtube__center-icon--play {
+  display: contents;
+}
+
+/* SVG: 버튼 width 기준 55%, 버튼 중앙 정렬 */
+.tube-youtube__center-btn svg {
+  display: block;
+  width: 55%;
+  height: 55%;
+}
+
 /* --- 재생 중: hover 시 일시정지 아이콘 표시 --- */
 .tube-youtube__overlay--playing:hover .tube-youtube__center-btn {
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
-}
-
-.tube-youtube__overlay--playing .tube-youtube__center-icon--pause {
-  display: flex;
 }
 
 /* --- 일시정지/종료: 항상 재생 아이콘 표시 --- */
@@ -263,7 +267,7 @@
 }
 
 .tube-youtube__overlay--paused .tube-youtube__center-icon--play {
-  display: flex;
+  display: contents;
 }
 
 /* === Controls === */
