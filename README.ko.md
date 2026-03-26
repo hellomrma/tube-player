@@ -38,6 +38,7 @@ TubePlayer는 YouTube 기본 UI를 완전히 걷어내고 커스텀 컨트롤로
 - 팝업도 오버레이도 없이 레이아웃 안에 영상이 위치
 - 팝업과 동일한 모든 옵션 지원: 컨트롤, 반복, 시작 시간, 포스터 등
 - 재생 중 컨트롤바 자동 숨김, hover 시 표시
+- **인터랙션 없는 모드** (`data-tube-no-interaction`) — 모든 컨트롤 제거 및 클릭 재생/정지 비활성화. 배경 영상, 장식용 영상에 적합
 
 ### 재생 제어
 - 커스텀 컨트롤 바: 재생/일시정지, 시크 바, 시간 표시, 음소거, 볼륨 슬라이더, 전체화면, 속도, YouTube 링크
@@ -164,6 +165,7 @@ player.pause();
 | `data-tube-loop` | 반복 재생 여부 | `false` |
 | `data-tube-poster` | 커스텀 포스터 이미지 URL | YouTube 썸네일 |
 | `data-tube-close-on-end` | 영상 종료 시 레이어 자동 닫기 (팝업 전용) | `false` |
+| `data-tube-no-interaction` | 모든 컨트롤 및 클릭 재생/정지 비활성화 (인라인 전용) | `false` |
 
 사용 가능한 컨트롤 키: `play`, `progress`, `time`, `mute`, `volume`, `fullscreen`, `speed`, `youtube-link`
 

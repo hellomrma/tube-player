@@ -108,6 +108,18 @@ npm install tubeplayer
 - **컨트롤바 자동 숨김** — 재생 중에는 숨겨지고, hover 시 다시 표시됩니다.
 - 팝업 플레이어의 모든 옵션(`data-tube-loop`, `data-tube-start`, `data-tube-poster` 등)이 인라인 모드에서도 동일하게 동작합니다.
 
+### 인터랙션 없는 모드 (인라인 전용)
+
+`data-tube-no-interaction="true"`를 추가하면 모든 컨트롤을 제거하고 클릭 재생/정지도 비활성화합니다. 배경 영상, 장식용 영상 삽입에 적합합니다. `autoplay`와 `muted`를 함께 사용하면 자동으로 재생이 시작됩니다.
+
+```html
+<div data-tube-inline="jNQXAC9IVRw"
+     data-tube-no-interaction="true"
+     data-tube-autoplay="true"
+     data-tube-muted="true">
+</div>
+```
+
 ---
 
 ## 4. JavaScript API 방식
@@ -198,6 +210,8 @@ TubePlayer.init({
 | `fullscreen` | 우측 | 전체화면 |
 | `youtube-link` | 우측 | YouTube에서 열기 |
 
+컨트롤을 완전히 없애고 클릭 재생/정지까지 비활성화하려면 `data-tube-controls` 대신 `data-tube-no-interaction="true"`를 사용하세요. 3섹션의 [인터랙션 없는 모드](#인터랙션-없는-모드-인라인-전용)를 참조하세요.
+
 ---
 
 ## 9. 이벤트 활용
@@ -278,6 +292,7 @@ npm run dev
 | `data-tube-loop` | 반복 재생 여부 | `false` |
 | `data-tube-poster` | 커스텀 포스터 이미지 URL | YouTube 썸네일 |
 | `data-tube-close-on-end` | 영상 종료 시 레이어 자동 닫기 (팝업 전용) | `false` |
+| `data-tube-no-interaction` | 모든 컨트롤 및 클릭 재생/정지 비활성화 (인라인 전용) | `false` |
 
 볼륨 및 음소거 상태는 `localStorage`(`tube-volume`, `tube-muted`)에 자동 저장됩니다.
 

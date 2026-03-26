@@ -38,6 +38,7 @@ TubePlayer completely replaces the default YouTube UI with your own custom contr
 - No popup, no overlay — the video lives in your layout
 - Supports all the same options: controls, loop, start time, poster, and more
 - Control bar hides during playback and reappears on hover
+- **No-interaction mode** (`data-tube-no-interaction`) — removes all controls and disables click-to-play; ideal for background or decorative video
 
 ### Playback Control
 - Custom control bar: play/pause, seek bar, time display, mute, volume slider, fullscreen, speed, YouTube link
@@ -164,6 +165,7 @@ All other attributes below apply to both modes.
 | `data-tube-loop` | Loop video | `false` |
 | `data-tube-poster` | Custom poster image URL | YouTube thumbnail |
 | `data-tube-close-on-end` | Auto-close layer when video ends (popup only) | `false` |
+| `data-tube-no-interaction` | Disable all controls and click-to-play/pause (inline only) | `false` |
 
 Available control keys: `play`, `progress`, `time`, `mute`, `volume`, `fullscreen`, `speed`, `youtube-link`
 

@@ -108,6 +108,18 @@ Embed the player directly on the page — no popup, no overlay. Ideal for dedica
 - **Control bar auto-hides** during playback and reappears on hover.
 - All popup player options (`data-tube-loop`, `data-tube-start`, `data-tube-poster`, etc.) work identically in inline mode.
 
+### No-interaction mode (inline only)
+
+Add `data-tube-no-interaction="true"` to completely remove all controls and disable click-to-play/pause. Ideal for background or decorative video embeds. Combine with `autoplay` and `muted` to start playback automatically.
+
+```html
+<div data-tube-inline="jNQXAC9IVRw"
+     data-tube-no-interaction="true"
+     data-tube-autoplay="true"
+     data-tube-muted="true">
+</div>
+```
+
 ---
 
 ## 4. JavaScript API
@@ -198,6 +210,8 @@ List the controls to display in the `data-tube-controls` attribute, comma-separa
 | `fullscreen` | right | Toggle fullscreen |
 | `youtube-link` | right | Open on YouTube |
 
+To remove all controls entirely and also disable click-to-play/pause, use `data-tube-no-interaction="true"` instead of `data-tube-controls`. See [No-interaction mode](#no-interaction-mode-inline-only) in section 3.
+
 ---
 
 ## 9. Events
@@ -278,6 +292,7 @@ npm run dev
 | `data-tube-loop` | Loop video | `false` |
 | `data-tube-poster` | Custom poster image URL | YouTube thumbnail |
 | `data-tube-close-on-end` | Auto-close layer when video ends (popup only) | `false` |
+| `data-tube-no-interaction` | Disable all controls and click-to-play/pause (inline only) | `false` |
 
 Volume and mute state are automatically persisted to `localStorage` (`tube-volume`, `tube-muted`).
 
