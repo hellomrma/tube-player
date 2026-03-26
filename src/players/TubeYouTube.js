@@ -81,6 +81,7 @@ export class TubeYouTube extends EventEmitter {
       loop: false,
       startTime: 0,
       poster: null,
+      noInteraction: false,
       ...options,
     };
     this.state = YT_STATES.UNSTARTED;
@@ -130,33 +131,37 @@ export class TubeYouTube extends EventEmitter {
     // 중앙에 재생/일시정지 아이콘을 표시한다.
     const overlay = document.createElement('div');
     overlay.className = 'tube-youtube__overlay';
-    overlay.innerHTML = `
-      <button class="tube-youtube__center-btn" aria-label="재생" aria-pressed="false">
-        <span class="tube-youtube__center-icon tube-youtube__center-icon--play">
-          <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><polygon points="16,10 40,24 16,38"/></svg>
-        </span>
-        <span class="tube-youtube__center-icon tube-youtube__center-icon--pause">
-          <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><rect x="12" y="10" width="8" height="28"/><rect x="28" y="10" width="8" height="28"/></svg>
-        </span>
-      </button>
-    `;
-    this._centerBtn = overlay.querySelector('.tube-youtube__center-btn');
-    overlay.addEventListener('click', () => {
-      if (this.state === YT_STATES.PLAYING) {
-        this.pause();
-      } else {
-        this.play();
-      }
-    });
+    if (!this.options.noInteraction) {
+      overlay.innerHTML = `
+        <button class="tube-youtube__center-btn" aria-label="재생" aria-pressed="false">
+          <span class="tube-youtube__center-icon tube-youtube__center-icon--play">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><polygon points="16,10 40,24 16,38"/></svg>
+          </span>
+          <span class="tube-youtube__center-icon tube-youtube__center-icon--pause">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><rect x="12" y="10" width="8" height="28"/><rect x="28" y="10" width="8" height="28"/></svg>
+          </span>
+        </button>
+      `;
+      this._centerBtn = overlay.querySelector('.tube-youtube__center-btn');
+      overlay.addEventListener('click', () => {
+        if (this.state === YT_STATES.PLAYING) {
+          this.pause();
+        } else {
+          this.play();
+        }
+      });
+    }
     playerWrapper.appendChild(overlay);
     this._overlayEl = overlay;
 
     container.appendChild(playerWrapper);
 
-    // 컨트롤 영역
-    this._controlsEl = document.createElement('div');
-    this._controlsEl.className = 'tube-youtube__controls';
-    container.appendChild(this._controlsEl);
+    // 컨트롤 영역 (noInteraction 모드에서는 렌더링 안 함)
+    if (!this.options.noInteraction) {
+      this._controlsEl = document.createElement('div');
+      this._controlsEl.className = 'tube-youtube__controls';
+      container.appendChild(this._controlsEl);
+    }
 
     // YouTube API 로드 후 플레이어 생성
     this.state = YT_STATES.LOADING;
@@ -308,7 +313,7 @@ export class TubeYouTube extends EventEmitter {
   }
 
   _mountControls() {
-    if (!this._controlsEl) return;
+    if (!this._controlsEl || this.options.noInteraction) return;
 
     // 동적으로 컨트롤 임포트 및 마운트
     const controlMap = {

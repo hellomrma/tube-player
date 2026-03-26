@@ -120,6 +120,7 @@ class TubeManager {
       const loop = el.getAttribute('data-tube-loop') === 'true';
       const startTime = parseInt(el.getAttribute('data-tube-start') || '0', 10) || 0;
       const poster = el.getAttribute('data-tube-poster') || null;
+      const noInteraction = el.getAttribute('data-tube-no-interaction') === 'true';
 
       el.classList.add('tube-inline');
 
@@ -131,6 +132,7 @@ class TubeManager {
         loop,
         startTime,
         poster,
+        noInteraction,
       });
       this._players.set(id, player);
       player.mount(el);
