@@ -119,37 +119,44 @@
       filter: drop-shadow(0 0 50px rgba(255, 0, 0, 0.5));
     }
 
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border: 1px solid rgba(255, 77, 77, 0.35);
+      border-radius: 50px;
+      background: rgba(255, 77, 77, 0.08);
+      color: #ff7070;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      animation: fadeIn 0.8s ease-out both;
+    }
+
     h1 {
-      font-size: clamp(24px, 6vw, 32px);
-      font-weight: 300;
-      letter-spacing: -0.03em;
-      margin-bottom: 12px;
+      font-size: clamp(42px, 9vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
       animation: fadeIn 1s ease-out 0.2s both;
     }
 
     h1 span {
-      font-weight: 700;
-      background: linear-gradient(135deg, #fff 0%, #ff4d4d 100%);
+      background: linear-gradient(135deg, #fff 30%, #ff4d4d 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .h1-sub {
-      font-weight: 300;
-      font-size: clamp(18px, 4vw, 24px);
-      color: var(--text-secondary);
-      background: none;
-      -webkit-text-fill-color: var(--text-secondary);
-      display: block;
-      margin-top: 4px;
-    }
-
     p.desc {
-      color: #999;
-      font-size: clamp(14px, 4vw, 16px);
-      line-height: 1.6;
+      color: #888;
+      font-size: clamp(15px, 3vw, 18px);
+      line-height: 1.75;
       margin-bottom: 40px;
-      padding: 0 20px;
+      max-width: 480px;
       animation: fadeIn 1s ease-out 0.4s both;
     }
 
@@ -786,7 +793,8 @@
       <img src="./tubeplayer-logo.png" alt="TubePlayer Logo" />
     </div>
 
-    <h1><span>TubePlayer</span> <span class="h1-sub">YouTube Player Library</span></h1>
+    <div class="hero-badge">YouTube Player Library</div>
+    <h1><span>TubePlayer</span></h1>
     <p class="desc" data-i18n-html="hero.desc">Hide the YouTube UI completely.<br />Deliver a fully branded popup video experience.</p>
 
     <div class="hero-buttons">
