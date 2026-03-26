@@ -15,6 +15,7 @@ function setupYTMock({ errorCode } = {}) {
     getVolume: vi.fn(() => 100),
     getCurrentTime: vi.fn(() => 10),
     getDuration: vi.fn(() => 120),
+    setPlaybackQuality: vi.fn(),
     destroy: vi.fn(),
     _callbacks: {},
   };
