@@ -1,6 +1,6 @@
 {
   "name": "tubeplayer",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "TubePlayer — YouTube Popup Player. Custom YouTube popup player library with fully custom controls, mobile optimization, and no YouTube UI.",
   "type": "module",
   "main": "dist/tubeplayer.cjs.js",
