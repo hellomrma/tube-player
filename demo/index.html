@@ -1179,6 +1179,12 @@
                     <td class="default">false</td>
                     <td class="desc" data-i18n="ad.closeend"></td>
                   </tr>
+                  <tr>
+                    <td><code>data-tube-no-interaction</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.nointeraction"></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -1349,6 +1355,7 @@ TubePlayer.init();</code></pre>
         'ad.loop':     '영상이 끝나면 자동으로 반복 재생합니다.',
         'ad.poster':   '기본 YouTube 썸네일 대신 표시할 커스텀 포스터 이미지 URL.',
         'ad.closeend': '영상 종료 시 레이어를 자동으로 닫습니다. (팝업 전용)',
+        'ad.nointeraction': '모든 컨트롤과 클릭 재생/정지를 비활성화합니다. 배경·장식용 영상에 적합합니다. (인라인 전용)',
         'kb.space':    '재생 / 일시정지',
         'kb.esc':      '레이어 닫기',
         'kb.m':        '음소거 토글',
@@ -1452,6 +1459,7 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'ad.loop':     'Automatically loop the video when it ends.',
         'ad.poster':   'Custom poster image URL shown instead of the YouTube thumbnail.',
         'ad.closeend': 'Auto-close the layer when the video ends. (popup only)',
+        'ad.nointeraction': 'Disable all controls and click-to-play/pause. Ideal for background or decorative video. (inline only)',
         'kb.space':    'Play / Pause',
         'kb.esc':      'Close layer',
         'kb.m':        'Toggle mute',
