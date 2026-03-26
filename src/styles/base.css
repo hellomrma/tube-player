@@ -272,6 +272,20 @@
   align-items: center;
   padding: 0 12px 8px;
   z-index: 3;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+/* 재생 중일 때 컨트롤바 숨김 */
+.tube-youtube--playing .tube-youtube__controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* hover 시 다시 표시 */
+.tube-youtube--playing:hover .tube-youtube__controls {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .tube-youtube__progress-wrap {

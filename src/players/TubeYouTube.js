@@ -220,6 +220,7 @@ export class TubeYouTube extends EventEmitter {
             this.emit('video:statechange', newState);
 
             if (newState === YT_STATES.PLAYING) {
+              this._containerEl?.classList.add('tube-youtube--playing');
               this._posterEl?.classList.add('tube-youtube__poster--hide');
               this._overlayEl?.classList.add('tube-youtube__overlay--playing');
               this._overlayEl?.classList.remove('tube-youtube__overlay--paused');
@@ -230,6 +231,7 @@ export class TubeYouTube extends EventEmitter {
               this.emit('video:play');
               this._startProgressTracking();
             } else if (newState === YT_STATES.PAUSED) {
+              this._containerEl?.classList.remove('tube-youtube--playing');
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
@@ -240,6 +242,7 @@ export class TubeYouTube extends EventEmitter {
               this.emit('video:pause');
               this._stopProgressTracking();
             } else if (newState === YT_STATES.ENDED) {
+              this._containerEl?.classList.remove('tube-youtube--playing');
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
