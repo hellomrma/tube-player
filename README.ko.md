@@ -6,6 +6,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/tubeplayer)](https://www.npmjs.com/package/tubeplayer)
 [![license](https://img.shields.io/npm/l/tubeplayer)](./LICENSE)
 [![demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tubeplayer.playgrounder.dev/)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/hellomrma?label=Sponsor&logo=githubsponsors&color=EA4AAA)](https://github.com/sponsors/hellomrma)
 
 YouTube 영상을 **내 방식**으로 — YouTube 방식이 아닌.
 
