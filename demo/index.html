@@ -272,6 +272,7 @@
     .badge--play    { color: #79b8ff;        background: rgba(121,184,255,0.12); }
     .badge--control { color: #4ade80;        background: rgba(74,222,128,0.12); }
     .badge--custom  { color: #f59e0b;        background: rgba(245,158,11,0.12); }
+    .badge--inline  { color: #22d3ee;        background: rgba(34,211,238,0.12); }
     .feature-card__title {
       font-size: 17px;
       font-weight: 600;
@@ -326,6 +327,36 @@
     }
     @media (max-width: 768px) { .features-grid { grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 500px) { .features-grid { grid-template-columns: 1fr; } }
+
+    /* ─── Inline Demo ───────────────────────────────────── */
+    .inline-demo {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+    }
+    .inline-showcase {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-top: 48px;
+      align-items: start;
+    }
+    .inline-showcase__side {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .inline-showcase__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    @media (max-width: 700px) {
+      .inline-showcase { grid-template-columns: 1fr; }
+    }
 
     /* ─── Get Started ───────────────────────────────────── */
 
@@ -883,12 +914,71 @@
         <div class="feature-card__snippet">data-tube-poster="/path/to/image.jpg"</div>
       </div>
 
+      <!-- Card 7: Inline Player -->
+      <div class="feature-card">
+        <span class="feature-card__badge badge--inline">INLINE</span>
+        <div class="feature-card__title" data-i18n="fd.inline.title">Inline Player</div>
+        <div class="feature-card__desc" data-i18n="fd.inline.desc">Embed the player directly on the page — no popup, no overlay needed.</div>
+        <div class="feature-card__actions">
+          <button class="demo-btn" onclick="document.getElementById('inline-demo').scrollIntoView({behavior:'smooth'})">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            <span data-i18n="fd.inline.see"></span>
+          </button>
+        </div>
+        <div class="feature-card__snippet">data-tube-inline="VIDEO_ID"</div>
+      </div>
+
     </div>
 
     <div class="features-footer">
       <a href="#get-started" class="btn" onclick="event.preventDefault();document.getElementById('get-started').scrollIntoView({behavior:'smooth'})">
         Get Started ↓
       </a>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ─── Inline Demo ───────────────────────────────────── -->
+  <section class="inline-demo" id="inline-demo">
+    <div class="gs-header">
+      <span class="gs-label">Inline</span>
+      <h2 data-i18n="id.title">Inline Player</h2>
+      <p data-i18n="id.desc">Embed videos directly on the page — no popup required.</p>
+    </div>
+
+    <div class="inline-showcase">
+      <div class="inline-showcase__main">
+        <div class="inline-showcase__label" data-i18n="id.full">Full Controls</div>
+        <div data-tube-inline="jNQXAC9IVRw"
+             id="inline-full"
+             data-tube-theme="dark"
+             data-tube-controls="play,progress,time,mute,volume,fullscreen,speed"
+             data-tube-autoplay="false">
+        </div>
+      </div>
+
+      <div class="inline-showcase__side">
+        <div>
+          <div class="inline-showcase__label" data-i18n="id.minimal">Minimal Controls</div>
+          <div data-tube-inline="jNQXAC9IVRw"
+               id="inline-minimal"
+               data-tube-theme="dark"
+               data-tube-controls="mute,fullscreen"
+               data-tube-autoplay="false">
+          </div>
+        </div>
+        <div>
+          <div class="inline-showcase__label" data-i18n="id.loop">Loop</div>
+          <div data-tube-inline="jNQXAC9IVRw"
+               id="inline-loop"
+               data-tube-theme="dark"
+               data-tube-controls="play,mute,fullscreen"
+               data-tube-loop="true"
+               data-tube-autoplay="false">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1210,6 +1300,14 @@ TubePlayer.init();</code></pre>
         'fd.ctrl.full':   '전체',
         'fd.poster.title': '커스텀 포스터',
         'fd.poster.desc':  'YouTube 기본 썸네일 대신 원하는 이미지를 포스터로 사용합니다. 일시정지 시 확인 가능합니다.',
+        'fd.inline.title': '인라인 플레이어',
+        'fd.inline.desc':  '팝업 없이 페이지에 바로 영상을 삽입합니다.',
+        'fd.inline.see':   '데모 보기',
+        'id.title':   '인라인 플레이어',
+        'id.desc':    '팝업이나 오버레이 없이 페이지에 직접 영상을 삽입하세요.',
+        'id.full':    '전체 컨트롤',
+        'id.minimal': '최소 컨트롤',
+        'id.loop':    '반복 재생',
         'code.html':
 `<!-- 열기 버튼 -->
 <button data-tube-open="my-video">영상 보기</button>
@@ -1291,6 +1389,14 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'fd.ctrl.full':   'Full',
         'fd.poster.title': 'Custom Poster',
         'fd.poster.desc':  'Use your own image as the poster instead of the YouTube thumbnail. Visible when paused.',
+        'fd.inline.title': 'Inline Player',
+        'fd.inline.desc':  'Embed the player directly on the page — no popup, no overlay needed.',
+        'fd.inline.see':   'See Demo',
+        'id.title':   'Inline Player',
+        'id.desc':    'Embed videos directly on the page — no popup required.',
+        'id.full':    'Full Controls',
+        'id.minimal': 'Minimal Controls',
+        'id.loop':    'Loop',
         'code.html':
 `<!-- Open trigger -->
 <button data-tube-open="my-video">Watch Video</button>

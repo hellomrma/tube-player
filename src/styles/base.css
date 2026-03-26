@@ -126,6 +126,12 @@
   opacity: 1;
 }
 
+/* === Inline Player === */
+.tube-inline {
+  display: block;
+  width: 100%;
+}
+
 /* === KitYouTube === */
 .tube-youtube {
   position: relative;

@@ -105,6 +105,37 @@ class TubeManager {
       }
     });
 
+    // data-tube-inline 탐색 (팝업 없이 페이지에 직접 렌더링)
+    const inlineEls = document.querySelectorAll('[data-tube-inline]');
+    inlineEls.forEach((el, idx) => {
+      const videoId = el.getAttribute('data-tube-inline');
+      const id = el.id || `tube-inline-${idx}`;
+      const autoplay = el.getAttribute('data-tube-autoplay') === 'true';
+      const muted = el.getAttribute('data-tube-muted') === 'true';
+      const theme = el.getAttribute('data-tube-theme') || globalOptions.theme || 'dark';
+      const controlsAttr = el.getAttribute('data-tube-controls');
+      const controls = controlsAttr
+        ? controlsAttr.split(',').map((s) => s.trim())
+        : undefined;
+      const loop = el.getAttribute('data-tube-loop') === 'true';
+      const startTime = parseInt(el.getAttribute('data-tube-start') || '0', 10) || 0;
+      const poster = el.getAttribute('data-tube-poster') || null;
+
+      el.classList.add('tube-inline');
+
+      const player = new TubeYouTube(videoId, {
+        autoplay,
+        muted,
+        theme: typeof theme === 'string' ? theme : 'dark',
+        controls,
+        loop,
+        startTime,
+        poster,
+      });
+      this._players.set(id, player);
+      player.mount(el);
+    });
+
     // data-tube-open 트리거 버튼 연결
     const triggers = document.querySelectorAll('[data-tube-open]');
     triggers.forEach((btn) => {
