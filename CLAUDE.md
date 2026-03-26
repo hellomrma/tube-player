@@ -108,3 +108,23 @@ npm run test       # Run Vitest tests
 - Data attributes: `data-tube-` prefix (e.g. `data-tube-layer`, `data-tube-youtube`, `data-tube-inline`)
 - CSS variables: `--tube-` prefix (e.g. `--tube-control-color`, `--tube-dim-bg`)
 - JS classes: `Tube` prefix (e.g. `TubeLayer`, `TubeYouTube`, `TubeManager`)
+
+## Documentation
+
+When updating documentation or content files, always check and update all related files (e.g., index.html, README.md, CLAUDE.md) in the same pass. Never leave dependent files out of sync.
+
+## UI/Styling
+
+For UI color/theme changes, always confirm the specific color values with the user before applying. Do not assume color preferences (e.g., don't pick blue when brown was intended).
+
+## Content & Data
+
+When generating sequential identifiers (issue numbers, version numbers, list indices), use sequential numbering from 1 unless explicitly told otherwise. Do not infer numbering schemes from dates or weeks.
+
+## Build & Quality
+
+After making code changes, always run the build/lint check before committing. For this project run `npm run build`. For TypeScript projects ensure `tsc --noEmit` passes.
+
+## Infrastructure & Deployment
+
+When creating health check or diagnostic endpoints, ensure they are publicly accessible without authentication/RBAC. Always verify the endpoint works without login.
