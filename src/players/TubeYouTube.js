@@ -203,6 +203,9 @@ export class TubeYouTube extends EventEmitter {
               }
             }
 
+            // 최상 화질로 설정 (hd1080 → hd720 순으로 fallback은 YouTube가 처리)
+            this._ytPlayer.setPlaybackQuality('hd1080');
+
             if (this.options.startTime > 0) {
               this._ytPlayer.seekTo(this.options.startTime, true);
             }
