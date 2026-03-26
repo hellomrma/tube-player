@@ -91,6 +91,7 @@ export class TubeYouTube extends EventEmitter {
     this._controlsEl = null;
     this._controlInstances = [];
     this._mounted = false;
+    this._ready = false;
 
     if (this.options.onReady) this.on('video:ready', this.options.onReady);
     if (this.options.onStateChange) this.on('video:statechange', this.options.onStateChange);
@@ -189,6 +190,7 @@ export class TubeYouTube extends EventEmitter {
           onReady: (event) => {
             this._playerEl = container.querySelector('iframe');
             this.state = YT_STATES.READY;
+            this._ready = true;
 
             // 저장된 볼륨/음소거 상태 복원, 없으면 options 기본값 사용
             const savedMuted = localStorage.getItem('tube-muted');
@@ -377,59 +379,59 @@ export class TubeYouTube extends EventEmitter {
   // === Public API ===
 
   play() {
-    if (this._ytPlayer) this._ytPlayer.playVideo();
+    if (this._ready) this._ytPlayer.playVideo();
     return this;
   }
 
   pause() {
-    if (this._ytPlayer) this._ytPlayer.pauseVideo();
+    if (this._ready) this._ytPlayer.pauseVideo();
     return this;
   }
 
   stop() {
-    if (this._ytPlayer) this._ytPlayer.stopVideo();
+    if (this._ready) this._ytPlayer.stopVideo();
     return this;
   }
 
   seek(seconds) {
-    if (this._ytPlayer) this._ytPlayer.seekTo(seconds, true);
+    if (this._ready) this._ytPlayer.seekTo(seconds, true);
     return this;
   }
 
   mute() {
-    if (this._ytPlayer) this._ytPlayer.mute();
+    if (this._ready) this._ytPlayer.mute();
     localStorage.setItem('tube-muted', 'true');
     this.emit('video:mute', true);
     return this;
   }
 
   unmute() {
-    if (this._ytPlayer) this._ytPlayer.unMute();
+    if (this._ready) this._ytPlayer.unMute();
     localStorage.setItem('tube-muted', 'false');
     this.emit('video:mute', false);
     return this;
   }
 
   isMuted() {
-    return this._ytPlayer ? this._ytPlayer.isMuted() : false;
+    return this._ready ? this._ytPlayer.isMuted() : false;
   }
 
   setVolume(value) {
-    if (this._ytPlayer) this._ytPlayer.setVolume(value);
+    if (this._ready) this._ytPlayer.setVolume(value);
     localStorage.setItem('tube-volume', Math.round(value));
     return this;
   }
 
   getVolume() {
-    return this._ytPlayer ? this._ytPlayer.getVolume() : 0;
+    return this._ready ? this._ytPlayer.getVolume() : 0;
   }
 
   getCurrentTime() {
-    return this._ytPlayer ? this._ytPlayer.getCurrentTime() : 0;
+    return this._ready ? this._ytPlayer.getCurrentTime() : 0;
   }
 
   getDuration() {
-    return this._ytPlayer ? this._ytPlayer.getDuration() : 0;
+    return this._ready ? this._ytPlayer.getDuration() : 0;
   }
 
   getState() {
@@ -455,6 +457,7 @@ export class TubeYouTube extends EventEmitter {
     }
     this.removeAllListeners();
     this._mounted = false;
+    this._ready = false;
   }
 }
 
