@@ -116,7 +116,7 @@ export class TubeYouTube extends EventEmitter {
     const playerWrapper = document.createElement('div');
     playerWrapper.className = 'tube-youtube__player';
     const playerTarget = document.createElement('div');
-    playerTarget.id = `tube-yt-${this.videoId}-${Date.now()}`;
+    playerTarget.id = `tube-yt-${++TubeYouTube._counter}`;
     playerWrapper.appendChild(playerTarget);
 
     // 포스터 — YouTube 썸네일로 iframe을 덮어 일시정지/종료 시 기본 UI 노출 차단
@@ -463,3 +463,5 @@ export class TubeYouTube extends EventEmitter {
 
 // 전역 커스텀 컨트롤 레지스트리
 TubeYouTube._customControls = {};
+// 인스턴스 고유 ID 카운터 (동시 마운트 시 Date.now() 충돌 방지)
+TubeYouTube._counter = 0;
