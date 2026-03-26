@@ -212,13 +212,13 @@
   justify-content: center;
 }
 
-/* 중앙 버튼 */
+/* 중앙 버튼 — 플레이어 너비 기준 비율로 크기 결정 */
 .tube-youtube__center-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
+  width: clamp(36px, 8%, 80px);
+  aspect-ratio: 1;
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.55);
@@ -228,6 +228,11 @@
   transform: scale(0.85);
   transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s;
   pointer-events: none;
+}
+
+.tube-youtube__center-btn svg {
+  width: 55%;
+  height: 55%;
 }
 
 .tube-youtube__center-btn:hover {
