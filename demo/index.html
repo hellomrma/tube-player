@@ -1044,11 +1044,11 @@
             </div>
           </div>
 
-          <!-- Layer attribute table -->
+          <!-- Layer attribute table (popup only) -->
           <div class="attr-section">
             <p class="attr-section-title">
               <span data-i18n="sec.layer"></span>
-              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-layer]</code>
+              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-layer] — Popup</code>
             </p>
             <div class="table-wrap">
               <table class="attr-table">
@@ -1076,7 +1076,7 @@
                   <tr>
                     <td><code>data-tube-close-on-dim</code></td>
                     <td class="type">boolean</td>
-                    <td class="default">false</td>
+                    <td class="default">true</td>
                     <td class="desc" data-i18n="ad.dim"></td>
                   </tr>
                 </tbody>
@@ -1084,11 +1084,11 @@
             </div>
           </div>
 
-          <!-- YouTube attribute table -->
+          <!-- Player attribute table (popup + inline) -->
           <div class="attr-section">
             <p class="attr-section-title">
               <span data-i18n="sec.yt"></span>
-              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-youtube]</code>
+              <code style="font-family:monospace;font-size:11px;color:#555;margin-left:6px">[data-tube-youtube] / [data-tube-inline]</code>
             </p>
             <div class="table-wrap">
               <table class="attr-table">
@@ -1102,22 +1102,28 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td><code>data-tube-inline</code></td>
-                    <td class="type">string</td>
-                    <td class="default">—</td>
-                    <td class="desc" data-i18n-html="ad.inline"></td>
-                  </tr>
-                  <tr>
                     <td><code>data-tube-youtube</code></td>
                     <td class="type">string</td>
                     <td class="default">—</td>
                     <td class="desc" data-i18n-html="ad.ytid"></td>
                   </tr>
                   <tr>
+                    <td><code>data-tube-inline</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n-html="ad.inline"></td>
+                  </tr>
+                  <tr>
                     <td><code>data-tube-autoplay</code></td>
                     <td class="type">boolean</td>
-                    <td class="default">false</td>
+                    <td class="default">true / false</td>
                     <td class="desc" data-i18n="ad.autoplay"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-muted</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.muted"></td>
                   </tr>
                   <tr>
                     <td><code>data-tube-theme</code></td>
@@ -1130,6 +1136,30 @@
                     <td class="type">string</td>
                     <td class="default">—</td>
                     <td class="desc" data-i18n-html="ad.controls"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-start</code></td>
+                    <td class="type">number</td>
+                    <td class="default">0</td>
+                    <td class="desc" data-i18n="ad.start"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-loop</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.loop"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-poster</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n="ad.poster"></td>
+                  </tr>
+                  <tr>
+                    <td><code>data-tube-close-on-end</code></td>
+                    <td class="type">boolean</td>
+                    <td class="default">false</td>
+                    <td class="desc" data-i18n="ad.closeend"></td>
                   </tr>
                 </tbody>
               </table>
@@ -1276,7 +1306,7 @@ TubePlayer.init();</code></pre>
         's3.title':    '초기화',
         's3.desc':     '스크립트를 불러오고 <code class="ic">TubePlayer.init()</code>을 호출합니다.',
         's4.title':    '이벤트 (선택)',
-        's4.desc':     '<code class="ic">TubePlayer.get(id)</code>로 레이어 인스턴스를 가져와 이벤트를 구독합니다.',
+        's4.desc':     '팝업은 <code class="ic">TubePlayer.get(id)</code>, 인라인은 <code class="ic">TubePlayer.getPlayer(id)</code>로 인스턴스를 가져와 이벤트를 구독합니다.',
         'tab.umd':     'UMD / CDN',
         'th.attr':     '속성',
         'th.type':     '타입',
@@ -1294,6 +1324,11 @@ TubePlayer.init();</code></pre>
         'ad.autoplay': '레이어가 열릴 때 자동으로 재생합니다.',
         'ad.theme':    '플레이어 컨트롤 테마.',
         'ad.controls': '활성화할 컨트롤 목록 (쉼표 구분).<br/>예: <code>"mute,fullscreen"</code>',
+        'ad.muted':    '음소거 상태로 시작합니다.',
+        'ad.start':    '재생 시작 시간 (초 단위).',
+        'ad.loop':     '영상이 끝나면 자동으로 반복 재생합니다.',
+        'ad.poster':   '기본 YouTube 썸네일 대신 표시할 커스텀 포스터 이미지 URL.',
+        'ad.closeend': '영상 종료 시 레이어를 자동으로 닫습니다. (팝업 전용)',
         'kb.space':    '재생 / 일시정지',
         'kb.esc':      '레이어 닫기',
         'kb.m':        '음소거 토글',
@@ -1373,7 +1408,7 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         's3.title':    'Initialize',
         's3.desc':     'Import the script and call <code class="ic">TubePlayer.init()</code>.',
         's4.title':    'Events (optional)',
-        's4.desc':     'Get a layer instance with <code class="ic">TubePlayer.get(id)</code> and subscribe to events.',
+        's4.desc':     'Use <code class="ic">TubePlayer.get(id)</code> for popup layers, or <code class="ic">TubePlayer.getPlayer(id)</code> for inline players — then subscribe to events.',
         'tab.umd':     'UMD / CDN',
         'th.attr':     'Attribute',
         'th.type':     'Type',
@@ -1391,6 +1426,11 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'ad.autoplay': 'Automatically play when the layer opens.',
         'ad.theme':    'Control bar color theme.',
         'ad.controls': 'Comma-separated list of controls to enable.<br/>e.g. <code>"mute,fullscreen"</code>',
+        'ad.muted':    'Start with audio muted.',
+        'ad.start':    'Playback start time in seconds.',
+        'ad.loop':     'Automatically loop the video when it ends.',
+        'ad.poster':   'Custom poster image URL shown instead of the YouTube thumbnail.',
+        'ad.closeend': 'Auto-close the layer when the video ends. (popup only)',
         'kb.space':    'Play / Pause',
         'kb.esc':      'Close layer',
         'kb.m':        'Toggle mute',
