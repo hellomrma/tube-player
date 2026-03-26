@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TubePlayer — Custom YouTube Popup Player Library</title>
-  <meta name="description" content="TubePlayer is a lightweight JavaScript library that completely hides the YouTube UI and delivers a fully branded popup video experience. Custom controls, mobile-optimized, framework-agnostic." />
-  <meta name="keywords" content="youtube popup player, youtube embed, custom youtube player, youtube modal, video popup, custom controls, vanilla js video player, youtube iframe api, tubeplayer" />
+  <title>TubePlayer — Custom YouTube Player Library</title>
+  <meta name="description" content="TubePlayer is a lightweight JavaScript library that completely hides the YouTube UI. Use as a popup layer or embed inline — custom controls, mobile-optimized, framework-agnostic." />
+  <meta name="keywords" content="youtube player, youtube popup player, youtube inline player, youtube embed, custom youtube player, youtube modal, video popup, inline video, custom controls, vanilla js video player, youtube iframe api, tubeplayer" />
   <meta name="author" content="hellomrma" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://tubeplayer.playgrounder.dev/" />
@@ -13,8 +13,8 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="TubePlayer" />
-  <meta property="og:title" content="TubePlayer — Custom YouTube Popup Player Library" />
-  <meta property="og:description" content="Hide the YouTube UI completely. Deliver a fully branded popup video experience with custom controls, animations, and mobile support — in just a few lines of code." />
+  <meta property="og:title" content="TubePlayer — Custom YouTube Player Library" />
+  <meta property="og:description" content="Hide the YouTube UI completely. Use as a popup layer or embed inline — custom controls, animations, and mobile support in just a few lines of code." />
   <meta property="og:url" content="https://tubeplayer.playgrounder.dev/" />
   <meta property="og:image" content="https://tubeplayer.playgrounder.dev/tubeplayer-logo.png" />
   <meta property="og:locale" content="en_US" />
@@ -22,8 +22,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="TubePlayer — Custom YouTube Popup Player Library" />
-  <meta name="twitter:description" content="Hide the YouTube UI completely. Deliver a fully branded popup video experience with custom controls, animations, and mobile support." />
+  <meta name="twitter:title" content="TubePlayer — Custom YouTube Player Library" />
+  <meta name="twitter:description" content="Hide the YouTube UI completely. Use as a popup layer or embed inline — custom controls, animations, and mobile support." />
   <meta name="twitter:image" content="https://tubeplayer.playgrounder.dev/tubeplayer-logo.png" />
 
   <!-- hreflang -->
@@ -37,7 +37,7 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "TubePlayer",
-    "description": "TubePlayer is a lightweight, framework-agnostic JavaScript library that completely replaces the YouTube UI with custom popup controls. Features include popup animations (fade, slide, zoom), loop playback, start time, auto-close on end, control customization, custom poster images, mobile fullscreen support, volume persistence, and speed control.",
+    "description": "TubePlayer is a lightweight, framework-agnostic JavaScript library that completely replaces the YouTube UI with custom controls. Supports both popup layer mode and inline embedding. Features include popup animations (fade, slide, zoom), inline player, loop playback, start time, auto-close on end, control customization, custom poster images, mobile fullscreen support, volume persistence, and speed control.",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "url": "https://tubeplayer.playgrounder.dev/",
@@ -56,7 +56,7 @@
     "codeRepository": "https://github.com/hellomrma/tube-player",
     "license": "https://opensource.org/licenses/MIT",
     "programmingLanguage": "JavaScript",
-    "keywords": "youtube player, popup player, youtube embed, custom controls, vanilla js, mobile video"
+    "keywords": "youtube player, popup player, inline player, youtube embed, custom controls, vanilla js, mobile video"
   }
   </script>
 
@@ -786,7 +786,7 @@
       <img src="./tubeplayer-logo.png" alt="TubePlayer Logo" />
     </div>
 
-    <h1><span>TubePlayer</span> <span class="h1-sub">YouTube Popup Player</span></h1>
+    <h1><span>TubePlayer</span> <span class="h1-sub">YouTube Player Library</span></h1>
     <p class="desc" data-i18n-html="hero.desc">Hide the YouTube UI completely.<br />Deliver a fully branded popup video experience.</p>
 
     <div class="hero-buttons">
@@ -989,7 +989,7 @@
     <div class="gs-header">
       <span class="gs-label">Documentation</span>
       <h2>Get Started</h2>
-      <p data-i18n="gs.desc">Set up a YouTube popup player in just a few lines of code.</p>
+      <p data-i18n="gs.desc">Set up a YouTube player — popup or inline — in just a few lines of code.</p>
     </div>
 
     <div class="gs-steps">
@@ -1027,11 +1027,21 @@
         <div class="gs-step-num">2</div>
         <div class="gs-step-body">
           <h3 data-i18n="s2.title">HTML Markup</h3>
-          <p data-i18n-html="s2.desc">Declare the layer and player using <code class="ic">data</code> attributes, and add <code class="ic">data-tube-open</code> to the trigger element.</p>
+          <p data-i18n-html="s2.desc">Declare the player using <code class="ic">data</code> attributes. Choose <strong>Popup</strong> for a layer overlay, or <strong>Inline</strong> to embed directly on the page.</p>
 
-          <div class="code-wrap code-wrap--solo">
-            <pre><code class="language-html" data-i18n-code="code.html"></code></pre>
-            <button class="copy-btn" data-i18n="copy">Copy</button>
+          <div class="code-tabs" data-group="markup">
+            <button class="code-tab active" data-target="markup-popup">Popup</button>
+            <button class="code-tab" data-target="markup-inline">Inline</button>
+          </div>
+          <div class="code-wrap">
+            <div class="code-panel active" id="markup-popup">
+              <pre><code class="language-html" data-i18n-code="code.html"></code></pre>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
+            </div>
+            <div class="code-panel" id="markup-inline">
+              <pre><code class="language-html" data-i18n-code="code.inline"></code></pre>
+              <button class="copy-btn" data-i18n="copy">Copy</button>
+            </div>
           </div>
 
           <!-- Layer attribute table -->
@@ -1091,6 +1101,12 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <td><code>data-tube-inline</code></td>
+                    <td class="type">string</td>
+                    <td class="default">—</td>
+                    <td class="desc" data-i18n-html="ad.inline"></td>
+                  </tr>
                   <tr>
                     <td><code>data-tube-youtube</code></td>
                     <td class="type">string</td>
@@ -1249,14 +1265,14 @@ TubePlayer.init();</code></pre>
     // ─── i18n ─────────────────────────────────────────────
     const TRANSLATIONS = {
       ko: {
-        'hero.desc':   'YouTube UI를 완전히 숨기고<br />원하는 방식으로 커스텀 팝업 플레이어를 구현하세요.',
+        'hero.desc':   'YouTube UI를 완전히 숨기고<br />팝업 또는 인라인으로 커스텀 플레이어를 구현하세요.',
         'hero.open':   '플레이어 열기',
         'scroll.hint': '기능 살펴보기',
-        'gs.desc':     '몇 줄의 코드로 YouTube 팝업 플레이어를 완성하세요.',
+        'gs.desc':     '몇 줄의 코드로 팝업 또는 인라인 YouTube 플레이어를 완성하세요.',
         's1.title':    '설치',
         's1.desc':     'npm 또는 CDN으로 TubePlayer를 프로젝트에 추가합니다.',
         's2.title':    'HTML 마크업',
-        's2.desc':     '레이어 컨테이너와 YouTube 플레이어를 <code class="ic">data</code> 속성으로 선언하고, 열기 버튼에 <code class="ic">data-tube-open</code>을 지정합니다.',
+        's2.desc':     '<code class="ic">data</code> 속성으로 플레이어를 선언합니다. <strong>Popup</strong>은 오버레이 레이어로, <strong>Inline</strong>은 페이지에 직접 삽입합니다.',
         's3.title':    '초기화',
         's3.desc':     '스크립트를 불러오고 <code class="ic">TubePlayer.init()</code>을 호출합니다.',
         's4.title':    '이벤트 (선택)',
@@ -1273,7 +1289,8 @@ TubePlayer.init();</code></pre>
         'ad.layer':    '레이어 고유 ID. <code>data-tube-open</code>과 매핑됩니다.',
         'ad.anim':     '레이어 열기/닫기 애니메이션 종류.',
         'ad.dim':      '딤(배경) 클릭 시 레이어를 닫습니다.',
-        'ad.ytid':     'YouTube 영상 ID (URL의 <code>v=</code> 값).',
+        'ad.inline':   '인라인 플레이어용 YouTube 영상 ID. 팝업 없이 페이지에 직접 렌더링됩니다.',
+        'ad.ytid':     'YouTube 영상 ID (URL의 <code>v=</code> 값). 팝업 레이어 내부에 사용합니다.',
         'ad.autoplay': '레이어가 열릴 때 자동으로 재생합니다.',
         'ad.theme':    '플레이어 컨트롤 테마.',
         'ad.controls': '활성화할 컨트롤 목록 (쉼표 구분).<br/>예: <code>"mute,fullscreen"</code>',
@@ -1322,6 +1339,13 @@ TubePlayer.init();</code></pre>
        data-tube-controls="mute,fullscreen">
   </div>
 </div>`,
+        'code.inline':
+`<!-- 인라인 플레이어 (팝업 없이 페이지에 직접 삽입) -->
+<div data-tube-inline="jNQXAC9IVRw"
+     data-tube-theme="dark"
+     data-tube-controls="play,progress,time,mute,volume,fullscreen"
+     data-tube-autoplay="false">
+</div>`,
         'code.umd':
 `<!-- CDN으로 불러온 경우 전역 TubePlayer 사용 -->
 <script>
@@ -1338,14 +1362,14 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
       },
 
       en: {
-        'hero.desc':   'Hide the YouTube UI completely.<br />Deliver a fully branded popup video experience.',
+        'hero.desc':   'Hide the YouTube UI completely.<br />Use as a popup layer or embed inline — fully branded.',
         'hero.open':   'Try it Live',
         'scroll.hint': 'Explore Features',
-        'gs.desc':     'Set up a YouTube popup player in just a few lines of code.',
+        'gs.desc':     'Set up a YouTube player — popup or inline — in just a few lines of code.',
         's1.title':    'Install',
         's1.desc':     'Add TubePlayer to your project via npm or CDN.',
         's2.title':    'HTML Markup',
-        's2.desc':     'Declare the layer and player using <code class="ic">data</code> attributes, and add <code class="ic">data-tube-open</code> to the trigger element.',
+        's2.desc':     'Declare the player using <code class="ic">data</code> attributes. Choose <strong>Popup</strong> for a layer overlay, or <strong>Inline</strong> to embed directly on the page.',
         's3.title':    'Initialize',
         's3.desc':     'Import the script and call <code class="ic">TubePlayer.init()</code>.',
         's4.title':    'Events (optional)',
@@ -1362,7 +1386,8 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
         'ad.layer':    'Unique layer ID. Matched by <code>data-tube-open</code>.',
         'ad.anim':     'Animation type for open / close.',
         'ad.dim':      'Close the layer when the dim overlay is clicked.',
-        'ad.ytid':     'YouTube video ID (the <code>v=</code> value in the URL).',
+        'ad.inline':   'YouTube video ID for inline mode. Renders directly on the page — no popup required.',
+        'ad.ytid':     'YouTube video ID (the <code>v=</code> value in the URL). Used inside a popup layer.',
         'ad.autoplay': 'Automatically play when the layer opens.',
         'ad.theme':    'Control bar color theme.',
         'ad.controls': 'Comma-separated list of controls to enable.<br/>e.g. <code>"mute,fullscreen"</code>',
@@ -1410,6 +1435,13 @@ layer.on('video:end',    () => console.log('재생 종료'));`,
        data-tube-theme="dark"
        data-tube-controls="mute,fullscreen">
   </div>
+</div>`,
+        'code.inline':
+`<!-- Inline Player (no popup, embeds directly on the page) -->
+<div data-tube-inline="jNQXAC9IVRw"
+     data-tube-theme="dark"
+     data-tube-controls="play,progress,time,mute,volume,fullscreen"
+     data-tube-autoplay="false">
 </div>`,
         'code.umd':
 `<!-- When loaded via CDN, use the global TubePlayer -->

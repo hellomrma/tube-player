@@ -4,8 +4,10 @@ This file provides context for Claude Code to understand the project.
 
 ## Project Overview
 
-`tubeplayer` is a custom YouTube popup player JavaScript library.
-Designed by referencing the layer + YouTube structure of `cinder-city.com`.
+`tubeplayer` is a custom YouTube player JavaScript library supporting two embedding modes:
+
+- **Popup mode** (`data-tube-layer` + `data-tube-youtube`): Opens the video in a focused overlay with dim, animations, and close controls.
+- **Inline mode** (`data-tube-inline`): Embeds the player directly in the page layout without any popup.
 
 - Framework-agnostic (Vanilla JS core)
 - Completely hides the default YouTube UI and replaces it with custom controls
@@ -15,6 +17,7 @@ Designed by referencing the layer + YouTube structure of `cinder-city.com`.
 - **Demo page i18n**: auto-switches Korean/English via `navigator.language`, with manual toggle persisted to `localStorage`
 - **Published to npm** as `tubeplayer@0.1.0`
 - **v0.2 features**: swipe-to-close (mobile), volume/mute persistence (localStorage), loop, startTime, custom poster, closeOnEnd, speed control
+- **v0.2+ features**: inline player (`data-tube-inline`), control bar auto-hide on playback, responsive center button
 
 ## Tech Stack
 
@@ -42,6 +45,18 @@ tubeplayer/
 
 ## Core Architecture
 
+### Embedding Modes
+
+**Popup mode** (`data-tube-layer` + `data-tube-youtube`):
+- `TubeManager` creates a `TubeLayer` (fixed overlay) + `TubeYouTube` per `[data-tube-layer]` element.
+- Player is mounted lazily when the layer opens.
+- Supports animations (fade/slide/zoom), ESC/dim close, swipe-to-close, focus trap.
+
+**Inline mode** (`data-tube-inline`):
+- `TubeManager` finds `[data-tube-inline]` elements and mounts `TubeYouTube` directly into them on init.
+- No TubeLayer wrapper — the player renders in place within the normal document flow.
+- Multiple inline players on the same page are safe: player IDs use a static counter (`TubeYouTube._counter`) to avoid collisions.
+
 ### YouTube UI Blocking Strategy (important)
 
 Three layers are stacked on top of the YouTube iframe to fully block the default UI:
@@ -51,6 +66,14 @@ Three layers are stacked on top of the YouTube iframe to fully block the default
 3. **overlay** (z-index: 2) — always on top, intercepts mouse hover to block YouTube UI + center play/pause button
 4. **controls** (z-index: 3) — bottom custom control bar (mute, fullscreen)
 
+### Player Readiness Guard
+
+`TubeYouTube` uses a `_ready` boolean flag (set `true` in `onReady`, `false` in `destroy`) to guard all API method calls. `new YT.Player()` returns an object immediately but methods like `playVideo`/`pauseVideo`/`seekTo` are only available after `onReady`. This is especially important for inline players which are mounted simultaneously on page load.
+
+### Control Bar Auto-hide
+
+During playback the container gets `.tube-youtube--playing`. CSS hides the control bar (`opacity: 0; pointer-events: none`) and restores it on `:hover`. The bar is always visible when paused or ended.
+
 ### Mobile Optimization
 
 - **Fullscreen**: `:fullscreen` and `:-webkit-full-screen` pseudo-classes force `100vw`/`100vh` and release the `padding-bottom` ratio on mobile.
@@ -59,8 +82,10 @@ Three layers are stacked on top of the YouTube iframe to fully block the default
 
 ### Demo Page Structure (`demo/index.html`)
 
-- **Hero section**: logo, description, "Open Demo" button, scroll hint
-- **Get Started section**: install (npm/CDN tabs) → HTML markup (attribute reference tables) → init (ESM/UMD tabs) → events (4 steps). Code blocks use highlight.js for syntax highlighting with copy buttons.
+- **Hero section**: logo, description, "Try it Live" button, scroll hint
+- **Feature Demos section**: 7 interactive cards (Popup Animations, Loop, Start Time, Auto-close, Controls, Custom Poster, Inline Player)
+- **Inline Demo section**: 3 live inline players (Full Controls / Minimal / Loop)
+- **Get Started section**: install (npm/CDN tabs) → HTML markup (Popup/Inline tabs) → init (ESM/UMD tabs) → events (4 steps). Code blocks use highlight.js with copy buttons.
 - **i18n**: managed via `TRANSLATIONS` object (`ko`/`en`) and `data-i18n` / `data-i18n-html` / `data-i18n-code` attributes. `data-i18n-code` (code block text) is applied before highlight.js runs.
 
 ### Notable Behavior
@@ -80,6 +105,6 @@ npm run test       # Run Vitest tests
 ## Naming Conventions
 
 - CSS classes: `tube-` prefix (e.g. `tube-layer`, `tube-youtube`, `tube-control`)
-- Data attributes: `data-tube-` prefix (e.g. `data-tube-layer`, `data-tube-youtube`)
+- Data attributes: `data-tube-` prefix (e.g. `data-tube-layer`, `data-tube-youtube`, `data-tube-inline`)
 - CSS variables: `--tube-` prefix (e.g. `--tube-control-color`, `--tube-dim-bg`)
 - JS classes: `Tube` prefix (e.g. `TubeLayer`, `TubeYouTube`, `TubeManager`)
