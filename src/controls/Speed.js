@@ -1,3 +1,5 @@
+import { labels } from '../core/labels.js';
+
 const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 export class Speed {
@@ -10,7 +12,7 @@ export class Speed {
   mount(container) {
     this._el = document.createElement('button');
     this._el.className = 'tube-control tube-control--speed';
-    this._el.setAttribute('aria-label', '재생 속도');
+    this._el.setAttribute('aria-label', labels.speed);
     this._el.textContent = '1×';
 
     this._el.addEventListener('click', () => {
@@ -24,9 +26,7 @@ export class Speed {
 
   _setSpeed(rate) {
     this._currentSpeed = rate;
-    if (this._player._ytPlayer) {
-      this._player._ytPlayer.setPlaybackRate(rate);
-    }
+    this._player.setPlaybackRate(rate);
     this._el.textContent = `${rate}×`;
   }
 

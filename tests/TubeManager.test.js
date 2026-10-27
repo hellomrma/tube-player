@@ -91,3 +91,42 @@ describe('TubeManager', () => {
     expect(ytPlayer.mute).toHaveBeenCalled();
   });
 });
+
+describe('TubeManager 마운트 실패', () => {
+  afterEach(() => {
+    tubeManager.destroyAll();
+    delete window.YT;
+    document.body.innerHTML = '';
+  });
+
+  it('인라인 플레이어 오류가 처리되지 않은 rejection으로 새지 않음', async () => {
+    const onUnhandled = vi.fn();
+    process.on('unhandledRejection', onUnhandled);
+    window.YT = {
+      Player: vi.fn((targetId, config) => {
+        setTimeout(() => config.events.onError({ data: 100 }), 0);
+        return { destroy: vi.fn() };
+      }),
+    };
+    document.body.innerHTML = `<div id="bad" data-tube-inline="nope"></div>`;
+    tubeManager.init();
+    await wait(50);
+    process.off('unhandledRejection', onUnhandled);
+    expect(onUnhandled).not.toHaveBeenCalled();
+  });
+});
+
+describe('접근성 라벨', () => {
+  afterEach(() => {
+    tubeManager.destroyAll();
+    document.body.innerHTML = '';
+  });
+
+  it('init({ labels })로 라벨 덮어쓰기', () => {
+    document.body.innerHTML = `<div data-tube-layer="a"></div>`;
+    tubeManager.init({ labels: { close: '닫기', dialog: '동영상 플레이어' } });
+    const layerEl = tubeManager.getLayer('a').el;
+    expect(layerEl.getAttribute('aria-label')).toBe('동영상 플레이어');
+    expect(layerEl.querySelector('.tube-layer__close').getAttribute('aria-label')).toBe('닫기');
+  });
+});

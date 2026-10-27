@@ -246,6 +246,7 @@ player.mute();
 player.unmute();
 player.setVolume(80);   // 0–100
 player.seek(30);        // seek to 30 seconds
+player.setPlaybackRate(1.5);
 ```
 
 ---
@@ -262,6 +263,11 @@ On mobile touch devices, shortcut hints are hidden automatically.
 | `M` | Toggle mute |
 | `F` | Toggle fullscreen |
 | `←` / `→` | Seek ±5 seconds |
+
+### Accessibility labels
+
+`aria-label`s default to English (`Play`, `Mute`, `Close`, …). Override them with `TubePlayer.init({ labels: { play: '재생', close: '닫기' } })`.
+Available keys: `play`, `pause`, `mute`, `unmute`, `fullscreen`, `exitFullscreen`, `progress`, `volume`, `speed`, `youtubeLink`, `close`, `dialog`.
 
 ---
 

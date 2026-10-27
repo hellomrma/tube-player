@@ -169,6 +169,8 @@ All other attributes below apply to both modes.
 
 Available control keys: `play`, `progress`, `time`, `mute`, `volume`, `fullscreen`, `speed`, `youtube-link`
 
+Element attributes take precedence over global `TubePlayer.init()` options (e.g. `data-tube-animation` overrides `init({ animation })`).
+
 ## Keyboard Shortcuts (Desktop)
 
 | Key | Action |
@@ -189,6 +191,21 @@ TubePlayer.init({
     '--tube-dim-bg': 'rgba(10, 10, 30, 0.9)',
     '--tube-control-color': '#e0e0ff',
   }
+});
+```
+
+## Accessibility Labels
+
+Control buttons and the popup dialog use English `aria-label`s by default. Override any of them via `labels`:
+
+```js
+TubePlayer.init({
+  labels: {
+    play: '재생', pause: '일시정지', mute: '음소거', unmute: '음소거 해제',
+    fullscreen: '전체화면', exitFullscreen: '전체화면 종료',
+    progress: '재생 위치', volume: '볼륨', speed: '재생 속도',
+    youtubeLink: 'YouTube에서 보기', close: '닫기', dialog: '동영상 플레이어',
+  },
 });
 ```
 

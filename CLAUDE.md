@@ -88,6 +88,10 @@ During playback the container gets `.tube-youtube--playing`. CSS hides the contr
 - **Get Started section**: install (npm/CDN tabs) → HTML markup (Popup/Inline tabs) → init (ESM/UMD tabs) → events (4 steps). Code blocks use highlight.js with copy buttons.
 - **i18n**: managed via `TRANSLATIONS` object (`ko`/`en`) and `data-i18n` / `data-i18n-html` / `data-i18n-code` attributes. `data-i18n-code` (code block text) is applied before highlight.js runs.
 
+### Accessibility Labels
+
+All `aria-label` strings live in `src/core/labels.js` (English defaults). `TubePlayer.init({ labels })` overrides them via `setLabels()` before layers/players are created.
+
 ### Notable Behavior
 
 - **Video restart**: `TubeManager` calls `player.seek(0).play()` when a layer is reopened while already mounted, forcing playback to always start from the beginning.
@@ -100,6 +104,7 @@ npm run build      # Build demo site for Vercel → dist/
 npm run build:lib  # Library-only build (ES+CJS+UMD) → dist/
 npm run preview    # Preview build output
 npm run test       # Run Vitest tests
+npm run lint       # ESLint (flat config: eslint.config.js)
 ```
 
 ## Naming Conventions

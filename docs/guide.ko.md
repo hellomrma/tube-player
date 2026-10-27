@@ -246,6 +246,7 @@ player.mute();
 player.unmute();
 player.setVolume(80);   // 0–100
 player.seek(30);        // 30초로 이동
+player.setPlaybackRate(1.5);
 ```
 
 ---
@@ -262,6 +263,11 @@ player.seek(30);        // 30초로 이동
 | `M` | 음소거 토글 |
 | `F` | 전체화면 토글 |
 | `←` / `→` | 5초 앞/뒤 이동 |
+
+### 접근성 라벨
+
+`aria-label`은 기본적으로 영어(`Play`, `Mute`, `Close` 등)입니다. `TubePlayer.init({ labels: { play: '재생', close: '닫기' } })`로 덮어쓸 수 있습니다.
+사용 가능한 키: `play`, `pause`, `mute`, `unmute`, `fullscreen`, `exitFullscreen`, `progress`, `volume`, `speed`, `youtubeLink`, `close`, `dialog`.
 
 ---
 

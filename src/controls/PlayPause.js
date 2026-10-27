@@ -1,3 +1,5 @@
+import { labels } from '../core/labels.js';
+
 const ICON_PLAY = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>`;
 const ICON_PAUSE = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg>`;
 
@@ -14,7 +16,7 @@ export class PlayPause {
   mount(container) {
     this._el = document.createElement('button');
     this._el.className = 'tube-control tube-control--play';
-    this._el.setAttribute('aria-label', '재생');
+    this._el.setAttribute('aria-label', labels.play);
     this._el.innerHTML = ICON_PLAY;
 
     this._el.addEventListener('click', () => {
@@ -32,7 +34,7 @@ export class PlayPause {
     this._isPlaying = state === 'playing';
     if (!this._el) return;
     this._el.innerHTML = this._isPlaying ? ICON_PAUSE : ICON_PLAY;
-    this._el.setAttribute('aria-label', this._isPlaying ? '일시정지' : '재생');
+    this._el.setAttribute('aria-label', this._isPlaying ? labels.pause : labels.play);
   }
 
   destroy() {

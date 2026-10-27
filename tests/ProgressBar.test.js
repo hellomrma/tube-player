@@ -86,4 +86,17 @@ describe('ProgressBar', () => {
     // 드래그 종료
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 50 }));
   });
+
+  it('바 바깥에서 놓으면 0 ~ duration 범위로 seek', () => {
+    const el = container.querySelector('.tube-control--progress');
+    el.getBoundingClientRect = () => ({ left: 0, width: 100 });
+
+    el.dispatchEvent(new MouseEvent('mousedown', { clientX: 50, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 300 }));
+    expect(player.seek).toHaveBeenLastCalledWith(100);
+
+    el.dispatchEvent(new MouseEvent('mousedown', { clientX: 50, bubbles: true }));
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: -50 }));
+    expect(player.seek).toHaveBeenLastCalledWith(0);
+  });
 });

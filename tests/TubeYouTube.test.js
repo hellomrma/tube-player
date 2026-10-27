@@ -135,7 +135,7 @@ describe('Mute 컨트롤', () => {
     await new Promise((r) => setTimeout(r, 50));
 
     const btn = container.querySelector('.tube-control--mute');
-    expect(btn.getAttribute('aria-label')).toBe('음소거 해제');
+    expect(btn.getAttribute('aria-label')).toBe('Unmute');
   });
 });
 
@@ -187,5 +187,28 @@ describe('음소거/볼륨 저장', () => {
     const second = new TubeYouTube('abc123', { autoplay: false, controls: [] });
     await second.mount(document.body.appendChild(document.createElement('div')));
     expect(ytPlayer.mute).toHaveBeenCalled();
+  });
+});
+
+describe('API 로드 실패', () => {
+  afterEach(() => {
+    delete window.YT;
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+  });
+
+  it('로드 실패 후 다시 mount 하면 재시도', async () => {
+    delete window.YT;
+    const container = document.body.appendChild(document.createElement('div'));
+    const player = new TubeYouTube('abc123', { autoplay: false, controls: [] });
+
+    const first = player.mount(container);
+    document.head.querySelector('script[src*="iframe_api"]').onerror();
+    await expect(first).rejects.toThrow();
+    expect(player._mounted).toBe(false);
+
+    setupYTMock();
+    await player.mount(container);
+    expect(player._ready).toBe(true);
   });
 });

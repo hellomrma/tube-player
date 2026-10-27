@@ -1,4 +1,5 @@
 import { EventEmitter } from '../core/EventEmitter.js';
+import { labels } from '../core/labels.js';
 
 const YT_STATES = {
   UNSTARTED: 'unstarted',
@@ -151,7 +152,7 @@ export class TubeYouTube extends EventEmitter {
     overlay.className = 'tube-youtube__overlay';
     if (!this.options.noInteraction) {
       overlay.innerHTML = `
-        <button class="tube-youtube__center-btn" aria-label="재생" aria-pressed="false">
+        <button class="tube-youtube__center-btn" aria-label="${labels.play}" aria-pressed="false">
           <span class="tube-youtube__center-icon tube-youtube__center-icon--play">
             <svg viewBox="0 0 48 48" width="48" height="48" fill="currentColor"><polygon points="16,10 40,24 16,38"/></svg>
           </span>
@@ -187,6 +188,7 @@ export class TubeYouTube extends EventEmitter {
       await loadYouTubeAPI();
     } catch (err) {
       this.state = YT_STATES.UNSTARTED;
+      this._mounted = false; // 다음 mount 호출 시 재시도 가능하도록
       this.emit('video:error', err);
       throw err;
     }
@@ -210,7 +212,7 @@ export class TubeYouTube extends EventEmitter {
           widget_referrer: window.location.href,
         },
         events: {
-          onReady: (event) => {
+          onReady: () => {
             this._playerEl = container.querySelector('iframe');
             this.state = YT_STATES.READY;
             this._ready = true;
@@ -227,9 +229,6 @@ export class TubeYouTube extends EventEmitter {
                 this._ytPlayer.setVolume(parseInt(savedVolume, 10));
               }
             }
-
-            // 최상 화질로 설정 (hd1080 → hd720 순으로 fallback은 YouTube가 처리)
-            this._ytPlayer.setPlaybackQuality('hd1080');
 
             if (this.options.startTime > 0) {
               this._ytPlayer.seekTo(this.options.startTime, true);
@@ -250,7 +249,7 @@ export class TubeYouTube extends EventEmitter {
               this._overlayEl?.classList.add('tube-youtube__overlay--playing');
               this._overlayEl?.classList.remove('tube-youtube__overlay--paused');
               if (this._centerBtn) {
-                this._centerBtn.setAttribute('aria-label', '일시정지');
+                this._centerBtn.setAttribute('aria-label', labels.pause);
                 this._centerBtn.setAttribute('aria-pressed', 'true');
               }
               this.emit('video:play');
@@ -261,7 +260,7 @@ export class TubeYouTube extends EventEmitter {
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
               if (this._centerBtn) {
-                this._centerBtn.setAttribute('aria-label', '재생');
+                this._centerBtn.setAttribute('aria-label', labels.play);
                 this._centerBtn.setAttribute('aria-pressed', 'false');
               }
               this.emit('video:pause');
@@ -272,7 +271,7 @@ export class TubeYouTube extends EventEmitter {
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
               if (this._centerBtn) {
-                this._centerBtn.setAttribute('aria-label', '재생');
+                this._centerBtn.setAttribute('aria-label', labels.play);
                 this._centerBtn.setAttribute('aria-pressed', 'false');
               }
               this.emit('video:end');
@@ -442,6 +441,11 @@ export class TubeYouTube extends EventEmitter {
   setVolume(value) {
     if (this._ready) this._ytPlayer.setVolume(value);
     storageSet('tube-volume', Math.round(value));
+    return this;
+  }
+
+  setPlaybackRate(rate) {
+    if (this._ready) this._ytPlayer.setPlaybackRate(rate);
     return this;
   }
 

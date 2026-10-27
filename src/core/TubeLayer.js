@@ -1,4 +1,5 @@
 import { EventEmitter } from './EventEmitter.js';
+import { labels } from './labels.js';
 
 const STATES = {
   IDLE: 'idle',
@@ -58,6 +59,7 @@ export class TubeLayer extends EventEmitter {
       this.el = existing;
       this._contentsEl = existing.querySelector('.tube-layer__contents');
       this._bindDomEvents();
+      this._bindSwipeToClose();
       return;
     }
 
@@ -67,12 +69,12 @@ export class TubeLayer extends EventEmitter {
     layer.setAttribute('data-tube-state', STATES.IDLE);
     layer.setAttribute('role', 'dialog');
     layer.setAttribute('aria-modal', 'true');
-    layer.setAttribute('aria-label', this.id);
+    layer.setAttribute('aria-label', labels.dialog);
 
     layer.innerHTML = `
       <div class="tube-layer__dim"></div>
       <div class="tube-layer__contents-wrap" tabindex="-1">
-        <button class="tube-layer__close" aria-label="닫기">
+        <button class="tube-layer__close" aria-label="${labels.close}">
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>

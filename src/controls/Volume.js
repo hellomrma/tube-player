@@ -1,3 +1,5 @@
+import { labels } from '../core/labels.js';
+
 export class Volume {
   constructor(player) {
     this._player = player;
@@ -19,7 +21,7 @@ export class Volume {
     this._el = document.createElement('div');
     this._el.className = 'tube-control tube-control--volume';
     this._el.setAttribute('role', 'slider');
-    this._el.setAttribute('aria-label', '볼륨');
+    this._el.setAttribute('aria-label', labels.volume);
     this._el.setAttribute('aria-valuemin', '0');
     this._el.setAttribute('aria-valuemax', '100');
     this._el.setAttribute('aria-valuenow', '100');

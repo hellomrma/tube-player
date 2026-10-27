@@ -169,6 +169,8 @@ player.pause();
 
 사용 가능한 컨트롤 키: `play`, `progress`, `time`, `mute`, `volume`, `fullscreen`, `speed`, `youtube-link`
 
+요소의 data 속성이 전역 `TubePlayer.init()` 옵션보다 우선합니다 (예: `data-tube-animation`이 `init({ animation })`보다 우선).
+
 ## 키보드 단축키 (데스크톱)
 
 | 키 | 동작 |
@@ -189,6 +191,21 @@ TubePlayer.init({
     '--tube-dim-bg': 'rgba(10, 10, 30, 0.9)',
     '--tube-control-color': '#e0e0ff',
   }
+});
+```
+
+## 접근성 라벨
+
+컨트롤 버튼과 팝업 다이얼로그의 `aria-label`은 기본적으로 영어입니다. `labels` 옵션으로 원하는 항목만 덮어쓸 수 있습니다.
+
+```js
+TubePlayer.init({
+  labels: {
+    play: '재생', pause: '일시정지', mute: '음소거', unmute: '음소거 해제',
+    fullscreen: '전체화면', exitFullscreen: '전체화면 종료',
+    progress: '재생 위치', volume: '볼륨', speed: '재생 속도',
+    youtubeLink: 'YouTube에서 보기', close: '닫기', dialog: '동영상 플레이어',
+  },
 });
 ```
 

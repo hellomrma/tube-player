@@ -1,5 +1,6 @@
 import { TubeLayer } from './TubeLayer.js';
 import { TubeYouTube } from '../players/TubeYouTube.js';
+import { setLabels } from './labels.js';
 
 /**
  * 전역 인스턴스 관리자
@@ -20,6 +21,9 @@ class TubeManager {
   init(globalOptions = {}) {
     if (this._initialized) return;
     this._initialized = true;
+
+    // 접근성 라벨 덮어쓰기 (레이어/플레이어 생성 전에 적용)
+    if (globalOptions.labels) setLabels(globalOptions.labels);
 
     // 커스텀 테마 변수 적용
     if (globalOptions.theme && typeof globalOptions.theme === 'object') {
@@ -91,7 +95,11 @@ class TubeManager {
         // 레이어 열릴 때 플레이어 마운트 (player._mounted로 상태 관리)
         layer.on('layer:open', async () => {
           if (!player._mounted) {
-            await player.mount(layer.contentsEl);
+            try {
+              await player.mount(layer.contentsEl);
+            } catch {
+              return; // 오류는 video:error 이벤트로 전달됨
+            }
           } else if (player.options.restartOnOpen !== false) {
             player.seek(player.options.startTime || 0).play();
           }
@@ -136,7 +144,7 @@ class TubeManager {
         noInteraction,
       });
       this._players.set(id, player);
-      player.mount(el);
+      player.mount(el).catch(() => {}); // 오류는 video:error 이벤트로 전달됨
     });
 
     // data-tube-open 트리거 버튼 연결
@@ -170,17 +178,19 @@ class TubeManager {
           else player.mute();
           break;
         case 'f':
-        case 'F':
+        case 'F': {
           e.preventDefault();
           const container = player.getContainerEl();
           if (container) {
-            if (document.fullscreenElement) {
-              document.exitFullscreen();
+            // Safari 구버전은 webkit 접두사 API만 지원
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+              (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
             } else {
-              container.requestFullscreen();
+              (container.requestFullscreen || container.webkitRequestFullscreen)?.call(container);
             }
           }
           break;
+        }
         case 'ArrowLeft':
           e.preventDefault();
           player.seek(Math.max(0, player.getCurrentTime() - 5));

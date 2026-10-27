@@ -10,7 +10,7 @@ export type TubeVideoState =
   | 'paused'
   | 'buffering'
   | 'ended';
-export type TubeControlName = 'play' | 'mute' | 'fullscreen' | 'progress' | 'time' | 'youtube-link' | 'volume' | string;
+export type TubeControlName = 'play' | 'mute' | 'fullscreen' | 'progress' | 'time' | 'youtube-link' | 'volume' | 'speed' | string;
 
 // ─── EventEmitter ────────────────────────────────────────────────────────────
 
@@ -56,6 +56,10 @@ export interface TubeYouTubeOptions {
   theme?: TubeTheme;
   controls?: TubeControlName[];
   restartOnOpen?: boolean;
+  loop?: boolean;
+  startTime?: number;
+  poster?: string | null;
+  noInteraction?: boolean;
   onReady?: (player: TubeYouTube) => void;
   onStateChange?: (state: TubeVideoState) => void;
   onProgress?: (data: { current: number; duration: number; percent: number }) => void;
@@ -72,6 +76,11 @@ export class TubeYouTube extends EventEmitter {
   state: TubeVideoState;
   _mounted: boolean;
 
+  static registerControl(
+    name: string,
+    ControlClass: new (player: TubeYouTube) => { mount(container: HTMLElement): void; destroy?(): void },
+  ): void;
+
   constructor(videoId: string, options?: TubeYouTubeOptions);
 
   mount(container: HTMLElement): Promise<this>;
@@ -84,6 +93,7 @@ export class TubeYouTube extends EventEmitter {
   unmute(): this;
   isMuted(): boolean;
   setVolume(value: number): this;
+  setPlaybackRate(rate: number): this;
   getVolume(): number;
   getCurrentTime(): number;
   getDuration(): number;
@@ -103,11 +113,27 @@ export class TubeYouTube extends EventEmitter {
 
 // ─── TubeManager ─────────────────────────────────────────────────────────────
 
+export interface TubeLabels {
+  play?: string;
+  pause?: string;
+  mute?: string;
+  unmute?: string;
+  fullscreen?: string;
+  exitFullscreen?: string;
+  progress?: string;
+  volume?: string;
+  speed?: string;
+  youtubeLink?: string;
+  close?: string;
+  dialog?: string;
+}
+
 export interface TubeManagerGlobalOptions {
   animation?: TubeAnimation;
   autoplay?: boolean;
   restartOnOpen?: boolean;
   theme?: TubeTheme | Record<string, string>;
+  labels?: TubeLabels;
 }
 
 export interface TubeManagerEntry {
@@ -119,10 +145,12 @@ export interface TubeManagerEntry {
   close(): this;
 }
 
-export declare const tubeManager: {
+declare const TubePlayer: {
   init(globalOptions?: TubeManagerGlobalOptions): void;
   getLayer(id: string): TubeLayer | undefined;
   getPlayer(id: string): TubeYouTube | undefined;
   get(id: string): TubeManagerEntry | null;
   destroyAll(): void;
 };
+
+export default TubePlayer;

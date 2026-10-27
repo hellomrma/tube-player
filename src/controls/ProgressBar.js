@@ -1,3 +1,5 @@
+import { labels } from '../core/labels.js';
+
 export class ProgressBar {
   constructor(player) {
     this._player = player;
@@ -18,7 +20,7 @@ export class ProgressBar {
     this._el = document.createElement('div');
     this._el.className = 'tube-control tube-control--progress';
     this._el.setAttribute('role', 'slider');
-    this._el.setAttribute('aria-label', '재생 위치');
+    this._el.setAttribute('aria-label', labels.progress);
     this._el.setAttribute('aria-valuemin', '0');
     this._el.setAttribute('aria-valuemax', '100');
     this._el.setAttribute('aria-valuenow', '0');
@@ -99,7 +101,7 @@ export class ProgressBar {
     this._isDragging = false;
     this._el.classList.remove('is-dragging');
 
-    const percent = this._getPercent(e.changedTouches ? e.changedTouches[0] : e);
+    const percent = Math.min(100, Math.max(0, this._getPercent(e.changedTouches ? e.changedTouches[0] : e)));
     const duration = this._player.getDuration();
     const seekTime = (percent / 100) * duration;
     this._player.seek(seekTime);
