@@ -62,7 +62,7 @@ tubeplayer/
 Three layers are stacked on top of the YouTube iframe to fully block the default UI:
 
 1. **iframe** (z-index: auto) — YouTube video
-2. **poster** (z-index: 1) — covers iframe with YouTube thumbnail when paused/ended
+2. **poster** (z-index: 1) — covers iframe with YouTube thumbnail when paused/ended, and stays for `POSTER_HIDE_DELAY` (3.5s) after playback starts/resumes because YouTube shows its own UI (center button, title, logo) for ~3s even with `controls: 0`
 3. **overlay** (z-index: 2) — always on top, intercepts mouse hover to block YouTube UI + center play/pause button
 4. **controls** (z-index: 3) — bottom custom control bar (mute, fullscreen)
 

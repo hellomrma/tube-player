@@ -212,3 +212,44 @@ describe('API 로드 실패', () => {
     expect(player._ready).toBe(true);
   });
 });
+
+describe('재생 시작 시 포스터 유지', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    delete window.YT;
+    document.body.innerHTML = '';
+  });
+
+  async function mountAndGetEvents() {
+    setupYTMock();
+    const container = document.body.appendChild(document.createElement('div'));
+    const player = new TubeYouTube('abc123', { autoplay: false, controls: [] });
+    await player.mount(container);
+    const events = window.YT.Player.mock.calls[0][1].events;
+    return { container, events };
+  }
+
+  it('재생 직후에는 포스터를 유지하고, YouTube 시작 UI가 사라진 뒤 숨김', async () => {
+    const { container, events } = await mountAndGetEvents();
+    vi.useFakeTimers();
+    const poster = container.querySelector('.tube-youtube__poster');
+
+    events.onStateChange({ data: 1 }); // PLAYING
+    expect(poster.classList.contains('tube-youtube__poster--hide')).toBe(false);
+
+    vi.advanceTimersByTime(3500);
+    expect(poster.classList.contains('tube-youtube__poster--hide')).toBe(true);
+  });
+
+  it('포스터가 숨겨지기 전에 일시정지하면 포스터 유지', async () => {
+    const { container, events } = await mountAndGetEvents();
+    vi.useFakeTimers();
+    const poster = container.querySelector('.tube-youtube__poster');
+
+    events.onStateChange({ data: 1 }); // PLAYING
+    vi.advanceTimersByTime(1000);
+    events.onStateChange({ data: 2 }); // PAUSED
+    vi.advanceTimersByTime(5000);
+    expect(poster.classList.contains('tube-youtube__poster--hide')).toBe(false);
+  });
+});

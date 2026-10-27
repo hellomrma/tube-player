@@ -21,6 +21,10 @@ const YT_STATE_MAP = {
   5: YT_STATES.READY, // cued
 };
 
+// YouTube는 재생 시작/재개 시 자체 UI(가운데 버튼·제목·로고)를 약 3초간 띄운다.
+// controls: 0으로도 끌 수 없으므로 그동안 포스터로 iframe을 계속 덮어둔다.
+const POSTER_HIDE_DELAY = 3500;
+
 // 사생활 보호 모드 등 저장소 접근이 막힌 환경에서는 예외를 무시
 function storageGet(key) {
   try {
@@ -106,6 +110,7 @@ export class TubeYouTube extends EventEmitter {
     this.state = YT_STATES.UNSTARTED;
     this._ytPlayer = null;
     this._progressTimer = null;
+    this._posterTimer = null;
     this._containerEl = null;
     this._playerEl = null;
     this._controlsEl = null;
@@ -245,7 +250,12 @@ export class TubeYouTube extends EventEmitter {
 
             if (newState === YT_STATES.PLAYING) {
               this._containerEl?.classList.add('tube-youtube--playing');
-              this._posterEl?.classList.add('tube-youtube__poster--hide');
+              if (!this._posterTimer && !this._posterEl?.classList.contains('tube-youtube__poster--hide')) {
+                this._posterTimer = setTimeout(() => {
+                  this._posterTimer = null;
+                  this._posterEl?.classList.add('tube-youtube__poster--hide');
+                }, POSTER_HIDE_DELAY);
+              }
               this._overlayEl?.classList.add('tube-youtube__overlay--playing');
               this._overlayEl?.classList.remove('tube-youtube__overlay--paused');
               if (this._centerBtn) {
@@ -256,6 +266,7 @@ export class TubeYouTube extends EventEmitter {
               this._startProgressTracking();
             } else if (newState === YT_STATES.PAUSED) {
               this._containerEl?.classList.remove('tube-youtube--playing');
+              this._clearPosterTimer();
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
@@ -267,6 +278,7 @@ export class TubeYouTube extends EventEmitter {
               this._stopProgressTracking();
             } else if (newState === YT_STATES.ENDED) {
               this._containerEl?.classList.remove('tube-youtube--playing');
+              this._clearPosterTimer();
               this._posterEl?.classList.remove('tube-youtube__poster--hide');
               this._overlayEl?.classList.remove('tube-youtube__overlay--playing');
               this._overlayEl?.classList.add('tube-youtube__overlay--paused');
@@ -327,6 +339,11 @@ export class TubeYouTube extends EventEmitter {
     };
 
     tryNext();
+  }
+
+  _clearPosterTimer() {
+    clearTimeout(this._posterTimer);
+    this._posterTimer = null;
   }
 
   _mountControls() {
@@ -471,6 +488,7 @@ export class TubeYouTube extends EventEmitter {
 
   destroy() {
     this._stopProgressTracking();
+    this._clearPosterTimer();
     this._controlInstances.forEach((c) => {
       if (c.destroy) c.destroy();
     });
