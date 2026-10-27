@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hellomrma/tube-player.git"
+    "url": "git+https://github.com/hellomrma/tube-player.git"
   },
   "homepage": "https://github.com/hellomrma/tube-player#readme",
   "bugs": {
