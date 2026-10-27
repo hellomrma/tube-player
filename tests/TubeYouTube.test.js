@@ -138,3 +138,54 @@ describe('Mute 컨트롤', () => {
     expect(btn.getAttribute('aria-label')).toBe('음소거 해제');
   });
 });
+
+describe('localStorage 접근 차단 환경', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    delete window.YT;
+    document.body.innerHTML = '';
+  });
+
+  it('localStorage가 예외를 던져도 mount/mute/setVolume 동작', async () => {
+    const ytPlayer = setupYTMock();
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('SecurityError');
+    });
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const player = new TubeYouTube('abc123', { autoplay: false, controls: [] });
+    await player.mount(container);
+
+    expect(() => player.mute()).not.toThrow();
+    expect(() => player.setVolume(50)).not.toThrow();
+    expect(ytPlayer.mute).toHaveBeenCalled();
+    expect(ytPlayer.setVolume).toHaveBeenCalledWith(50);
+  });
+});
+
+describe('음소거/볼륨 저장', () => {
+  afterEach(() => {
+    delete window.YT;
+    localStorage.clear();
+    document.body.innerHTML = '';
+  });
+
+  it('mute/setVolume 상태를 localStorage에 저장하고 다음 마운트 때 복원', async () => {
+    setupYTMock();
+    const first = new TubeYouTube('abc123', { autoplay: false, controls: [] });
+    await first.mount(document.body.appendChild(document.createElement('div')));
+    first.setVolume(40);
+    first.mute();
+    expect(localStorage.getItem('tube-muted')).toBe('true');
+    expect(localStorage.getItem('tube-volume')).toBe('40');
+
+    const ytPlayer = setupYTMock();
+    const second = new TubeYouTube('abc123', { autoplay: false, controls: [] });
+    await second.mount(document.body.appendChild(document.createElement('div')));
+    expect(ytPlayer.mute).toHaveBeenCalled();
+  });
+});

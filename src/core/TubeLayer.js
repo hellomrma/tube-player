@@ -42,6 +42,7 @@ export class TubeLayer extends EventEmitter {
     this.el = null;
     this._contentsEl = null;
     this._previousFocus = null;
+    this._closeTimer = null;
     this._boundKeydown = this._onKeydown.bind(this);
 
     if (this.options.onOpen) this.on('layer:open', this.options.onOpen);
@@ -162,6 +163,15 @@ export class TubeLayer extends EventEmitter {
   open() {
     if (this.state === STATES.ACTIVE || this.state === STATES.OPENING) return this;
 
+    // 닫히는 중이면 닫기를 취소하고 active로 복귀 (실제로 닫힌 적이 없으므로 이벤트 없음)
+    if (this.state === STATES.CLOSING) {
+      clearTimeout(this._closeTimer);
+      this._closeTimer = null;
+      this.state = STATES.ACTIVE;
+      this.el.setAttribute('data-tube-state', STATES.ACTIVE);
+      return this;
+    }
+
     this._previousFocus = document.activeElement;
     this.state = STATES.OPENING;
     this.el.setAttribute('data-tube-state', STATES.OPENING);
@@ -196,7 +206,8 @@ export class TubeLayer extends EventEmitter {
     this.state = STATES.CLOSING;
     this.el.setAttribute('data-tube-state', STATES.CLOSING);
 
-    setTimeout(() => {
+    this._closeTimer = setTimeout(() => {
+      this._closeTimer = null;
       this.state = STATES.IDLE;
       this.el.setAttribute('data-tube-state', STATES.IDLE);
 

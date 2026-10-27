@@ -52,6 +52,20 @@ describe('TubeLayer', () => {
     expect(closeFn).toHaveBeenCalledTimes(1);
   });
 
+  it('닫히는 중에 open() 호출 시 닫기 취소하고 active 유지', async () => {
+    layer.open();
+    await new Promise((r) => setTimeout(r, 50));
+    const closeFn = vi.fn();
+    layer.on('layer:close', closeFn);
+    layer.close();
+    await new Promise((r) => setTimeout(r, 50));
+    layer.open();
+    await new Promise((r) => setTimeout(r, 400));
+    expect(layer.isActive()).toBe(true);
+    expect(closeFn).not.toHaveBeenCalled();
+    expect(document.body.style.overflow).toBe('hidden');
+  });
+
   it('close() idle 상태에서 호출 시 무시', () => {
     const closeFn = vi.fn();
     layer.on('layer:close', closeFn);

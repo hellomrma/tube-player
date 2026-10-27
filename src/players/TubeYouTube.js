@@ -20,6 +20,23 @@ const YT_STATE_MAP = {
   5: YT_STATES.READY, // cued
 };
 
+// 사생활 보호 모드 등 저장소 접근이 막힌 환경에서는 예외를 무시
+function storageGet(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function storageSet(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // 저장 실패는 무시
+  }
+}
+
 let apiLoadPromise = null;
 
 function loadYouTubeAPI() {
@@ -199,8 +216,8 @@ export class TubeYouTube extends EventEmitter {
             this._ready = true;
 
             // 저장된 볼륨/음소거 상태 복원, 없으면 options 기본값 사용
-            const savedMuted = localStorage.getItem('tube-muted');
-            const savedVolume = localStorage.getItem('tube-volume');
+            const savedMuted = storageGet('tube-muted');
+            const savedVolume = storageGet('tube-volume');
             const shouldMute = savedMuted !== null ? savedMuted === 'true' : this.options.muted;
             if (shouldMute) {
               this._ytPlayer.mute();
@@ -406,14 +423,14 @@ export class TubeYouTube extends EventEmitter {
 
   mute() {
     if (this._ready) this._ytPlayer.mute();
-    localStorage.setItem('tube-muted', 'true');
+    storageSet('tube-muted', 'true');
     this.emit('video:mute', true);
     return this;
   }
 
   unmute() {
     if (this._ready) this._ytPlayer.unMute();
-    localStorage.setItem('tube-muted', 'false');
+    storageSet('tube-muted', 'false');
     this.emit('video:mute', false);
     return this;
   }
@@ -424,7 +441,7 @@ export class TubeYouTube extends EventEmitter {
 
   setVolume(value) {
     if (this._ready) this._ytPlayer.setVolume(value);
-    localStorage.setItem('tube-volume', Math.round(value));
+    storageSet('tube-volume', Math.round(value));
     return this;
   }
 
