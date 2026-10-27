@@ -76,13 +76,14 @@ export class TubeYouTube extends EventEmitter {
       autoplay: true,
       muted: false,
       theme: 'dark',
-      controls: ['mute', 'fullscreen'],
       restartOnOpen: true,
       loop: false,
       startTime: 0,
       poster: null,
       noInteraction: false,
       ...options,
+      // controls: undefined가 전달돼도 기본값 유지
+      controls: options.controls ?? ['mute', 'fullscreen'],
     };
     this.state = YT_STATES.UNSTARTED;
     this._ytPlayer = null;

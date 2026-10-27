@@ -25,6 +25,9 @@ export class Mute {
       }
     });
 
+    // 마운트 시점의 음소거 상태 반영 (저장된 상태/muted 옵션)
+    this._onMute(this._player.isMuted());
+
     container.appendChild(this._el);
   }
 

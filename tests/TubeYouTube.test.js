@@ -116,3 +116,25 @@ describe('TubeYouTube', () => {
     expect(player.getDuration()).toBe(120);
   });
 });
+
+describe('Mute 컨트롤', () => {
+  afterEach(() => {
+    delete window.YT;
+    localStorage.clear();
+    document.body.innerHTML = '';
+  });
+
+  it('음소거 상태로 시작하면 음소거 해제 아이콘으로 표시', async () => {
+    const ytPlayer = setupYTMock();
+    ytPlayer.isMuted.mockReturnValue(true);
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    const player = new TubeYouTube('abc123', { autoplay: false, muted: true, controls: ['mute'] });
+    await player.mount(container);
+    await new Promise((r) => setTimeout(r, 50));
+
+    const btn = container.querySelector('.tube-control--mute');
+    expect(btn.getAttribute('aria-label')).toBe('음소거 해제');
+  });
+});

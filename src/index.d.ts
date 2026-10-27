@@ -94,7 +94,7 @@ export class TubeYouTube extends EventEmitter {
   // Events
   on(event: 'video:ready', fn: (player: TubeYouTube) => void): this;
   on(event: 'video:statechange', fn: (state: TubeVideoState) => void): this;
-  on(event: 'video:play' | 'video:pause' | 'video:ended' | 'video:buffering', fn: () => void): this;
+  on(event: 'video:play' | 'video:pause' | 'video:end' | 'video:buffering', fn: () => void): this;
   on(event: 'video:progress', fn: (data: { current: number; duration: number; percent: number }) => void): this;
   on(event: 'video:mute', fn: (muted: boolean) => void): this;
   on(event: 'video:error', fn: (error: TubeVideoError | Error) => void): this;

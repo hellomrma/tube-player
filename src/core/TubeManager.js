@@ -38,10 +38,10 @@ class TubeManager {
       const animation = el.getAttribute('data-tube-animation') || globalOptions.animation || 'fade';
 
       const layer = new TubeLayer(id, {
+        ...globalOptions,
         closeOnDim,
         closeOnEsc,
         animation,
-        ...globalOptions,
       });
       this._layers.set(id, layer);
 
@@ -49,7 +49,12 @@ class TubeManager {
       const ytEl = el.querySelector('[data-tube-youtube]');
       if (ytEl) {
         const videoId = ytEl.getAttribute('data-tube-youtube');
-        const autoplay = ytEl.getAttribute('data-tube-autoplay') !== 'false';
+        const autoplayAttr = ytEl.getAttribute('data-tube-autoplay');
+        const autoplay = autoplayAttr !== null
+          ? autoplayAttr !== 'false'
+          : globalOptions.autoplay !== undefined
+            ? globalOptions.autoplay
+            : true;
         const muted = ytEl.getAttribute('data-tube-muted') === 'true';
         const theme = ytEl.getAttribute('data-tube-theme') || globalOptions.theme || 'dark';
         const controlsAttr = ytEl.getAttribute('data-tube-controls');
@@ -68,7 +73,7 @@ class TubeManager {
         const closeOnEnd = ytEl.getAttribute('data-tube-close-on-end') === 'true';
 
         const player = new TubeYouTube(videoId, {
-          autoplay: globalOptions.autoplay !== undefined ? globalOptions.autoplay : autoplay,
+          autoplay,
           muted,
           theme: typeof theme === 'string' ? theme : 'dark',
           controls,
@@ -83,8 +88,6 @@ class TubeManager {
           player.on('video:end', () => layer.close());
         }
 
-        let shortcutsBound = false;
-
         // 레이어 열릴 때 플레이어 마운트 (player._mounted로 상태 관리)
         layer.on('layer:open', async () => {
           if (!player._mounted) {
@@ -92,10 +95,8 @@ class TubeManager {
           } else if (player.options.restartOnOpen !== false) {
             player.seek(player.options.startTime || 0).play();
           }
-          if (!shortcutsBound) {
-            shortcutsBound = true;
-            this._bindPlayerShortcuts(layer, player);
-          }
+          // 닫힐 때 해제되므로 열릴 때마다 다시 바인딩
+          this._bindPlayerShortcuts(layer, player);
         });
 
         // 레이어 닫힐 때 일시정지
@@ -193,7 +194,7 @@ class TubeManager {
 
     document.addEventListener('keydown', handler);
 
-    layer.on('layer:close', () => {
+    layer.once('layer:close', () => {
       document.removeEventListener('keydown', handler);
     });
   }
