@@ -22,7 +22,7 @@ function setupYTMock() {
   };
 
   window.YT = {
-    Player: vi.fn((targetId, config) => {
+    Player: vi.fn(function (targetId, config) {
       setTimeout(() => config.events.onReady({}), 0);
       return ytPlayer;
     }),
@@ -103,7 +103,7 @@ describe('TubeManager 마운트 실패', () => {
     const onUnhandled = vi.fn();
     process.on('unhandledRejection', onUnhandled);
     window.YT = {
-      Player: vi.fn((targetId, config) => {
+      Player: vi.fn(function (targetId, config) {
         setTimeout(() => config.events.onError({ data: 100 }), 0);
         return { destroy: vi.fn() };
       }),

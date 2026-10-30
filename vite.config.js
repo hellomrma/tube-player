@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
           name: 'TubePlayer',
           formats: ['es', 'cjs', 'umd'],
           fileName: (format) => `tubeplayer.${format}.js`,
+          cssFileName: 'style',
         },
         rollupOptions: {
           output: {

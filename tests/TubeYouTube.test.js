@@ -21,7 +21,7 @@ function setupYTMock({ errorCode } = {}) {
   };
 
   window.YT = {
-    Player: vi.fn((targetId, config) => {
+    Player: vi.fn(function (targetId, config) {
       // onReady 또는 onError 비동기 호출
       setTimeout(() => {
         if (errorCode !== undefined) {

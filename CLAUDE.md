@@ -21,7 +21,7 @@ This file provides context for Claude Code to understand the project.
 
 ## Tech Stack
 
-- **Build**: Vite 5 (ESM + CJS + UMD)
+- **Build**: Vite 8 (ESM + CJS + UMD)
 - **Testing**: Vitest
 - **Language**: Vanilla JavaScript (ES Modules)
 - **Styles**: CSS (CSS variable-based theming, responsive)
